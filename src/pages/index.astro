@@ -1,9 +1,424 @@
 ---
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import { projects } from "../data/projects";
+import portrait from "../assets/vojta-portret.jpg";
+import scissorsStrip from "../assets/decor/scissors-strip.png";
+import reelScissors from "../assets/decor/reel-scissors.png";
+import filmstripRoll from "../assets/decor/filmstrip-roll.webp";
+import scissorsCut from "../assets/decor/scissors-cut.png";
+
+const pickerData = projects.map(({ title, client, category, format, youtubeId, description }) => ({
+  title,
+  client,
+  category,
+  format,
+  youtubeId,
+  description,
+}));
 ---
 
 <Layout title="Úvod">
-  <div class="wrap page-section">
-    <h1>Smallhead Edit</h1>
+  <div class="section-shell">
+    <Image
+      src={scissorsStrip}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="0.15"
+      width={220}
+      style="top: 40px; right: 1.5vw; width: min(220px, 16vw); transform: rotate(-6deg);"
+    />
+    <Image
+      src={reelScissors}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="0.2"
+      width={180}
+      style="bottom: 60px; right: 2.5vw; width: min(180px, 13vw); transform: rotate(12deg);"
+    />
+    <Image
+      src={filmstripRoll}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="-0.08"
+      width={160}
+      style="top: 120px; left: 2vw; width: min(160px, 12vw); transform: rotate(-10deg);"
+    />
+    <Image
+      src={scissorsCut}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="-0.15"
+      width={190}
+      style="bottom: 20px; left: 1.5vw; width: min(190px, 14vw); transform: rotate(8deg);"
+    />
+
+    <div class="wrap hero">
+      <div class="hero-text">
+        <h1>Materiál máte natočený. My zařídíme, aby výsledek fungoval.</h1>
+      </div>
+      <p>
+        Kompletní postprodukce videa — střih, barevné korekce, motion design i
+        zvuk — v DaVinci Resolve a Fusion. Pracujeme s filmovým tempem a
+        rytmem, protože víme, jakými prostředky udržet pozornost diváka.
+        Podívejte se, jak to vypadá na reálných projektech.
+      </p>
+      <div class="hero-cta">
+        <a class="btn" href="/#kontakt">Poslat zadání</a>
+        <a class="btn btn--secondary" href="/portfolio">Prohlédnout projekty</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-shell" id="ukazky">
+    <Image
+      src={scissorsCut}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="0.12"
+      width={200}
+      style="top: 20px; right: 2vw; width: min(200px, 15vw); transform: rotate(10deg);"
+    />
+    <Image
+      src={filmstripRoll}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="-0.1"
+      width={170}
+      style="bottom: 40px; left: 2vw; width: min(170px, 13vw); transform: rotate(-8deg);"
+    />
+
+    <section class="wrap page-section">
+      <div class="section-head">
+        <h2>Ukázky práce</h2>
+        <a class="more" href="/portfolio">Zobrazit celé portfólio</a>
+      </div>
+
+      <div class="showcase">
+        <div class="video-group video-grid" id="random-picks-horizontal"></div>
+        <div class="video-group vertical-grid" id="random-picks-vertical"></div>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/json" id="projects-data" is:inline set:html={JSON.stringify(pickerData)} />
+  <script is:inline>
+    function pickRandom(list, count) {
+      const pool = [...list];
+      const picked = [];
+      while (picked.length < count && pool.length > 0) {
+        const index = Math.floor(Math.random() * pool.length);
+        picked.push(pool.splice(index, 1)[0]);
+      }
+      return picked;
+    }
+
+    function thumbUrl(project) {
+      const quality = project.format === "horizontal" ? "maxresdefault" : "hqdefault";
+      return `https://img.youtube.com/vi/${project.youtubeId}/${quality}.jpg`;
+    }
+
+    function cardHtml(project) {
+      const clientMarkup = project.client ? `<p class="client">${project.client}</p>` : "";
+      return `
+        <article class="video-card" data-format="${project.format}">
+          <button
+            class="video-card__thumb"
+            type="button"
+            data-yt-id="${project.youtubeId}"
+            data-yt-title="${project.title}"
+            aria-label="Přehrát ukázku: ${project.title}"
+          >
+            <img src="${thumbUrl(project)}" alt="" loading="lazy" />
+            <span class="video-card__play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M8 5v14l11-7z"></path>
+              </svg>
+            </span>
+          </button>
+          <div class="video-card__meta">
+            <span class="tag">${project.category}</span>
+            <h3>${project.title}</h3>
+            ${clientMarkup}
+            <p class="desc">${project.description}</p>
+          </div>
+        </article>
+      `;
+    }
+
+    const dataEl = document.getElementById("projects-data");
+    const allProjects = dataEl ? JSON.parse(dataEl.textContent || "[]") : [];
+
+    const horizontal = allProjects.filter((p) => p.format === "horizontal");
+    const vertical = allProjects.filter((p) => p.format === "vertical");
+
+    const horizontalContainer = document.getElementById("random-picks-horizontal");
+    const verticalContainer = document.getElementById("random-picks-vertical");
+
+    if (horizontalContainer) {
+      horizontalContainer.innerHTML = pickRandom(horizontal, 1).map(cardHtml).join("");
+    }
+    if (verticalContainer) {
+      verticalContainer.innerHTML = pickRandom(vertical, 2).map(cardHtml).join("");
+    }
+  </script>
+
+  <div class="section-shell" id="o-mne">
+    <Image
+      src={scissorsStrip}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="0.1"
+      width={190}
+      style="top: 60px; right: 2vw; width: min(190px, 14vw); transform: rotate(6deg);"
+    />
+    <Image
+      src={reelScissors}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="0.18"
+      width={160}
+      style="bottom: 100px; right: 3vw; width: min(160px, 12vw); transform: rotate(-10deg);"
+    />
+    <Image
+      src={scissorsCut}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="-0.1"
+      width={210}
+      style="bottom: -20px; left: 1.5vw; width: min(210px, 15vw); transform: rotate(8deg);"
+    />
+
+    <section class="wrap page-section text-section about">
+      <div class="about-portrait">
+        <Image src={portrait} alt="Vojtěch Malohlava" width={480} height={600} />
+      </div>
+      <div class="about-content">
+        <h2>O mně</h2>
+        <p>Nezačal jsem střihem. Začal jsem tím, že jsem chtěl něco ukázat.</p>
+        <p>
+          Vlogy z vesnice. Potom sestřihy z fotbalu. Roky předtím, než mě
+          napadlo, že by z toho mohla být práce.
+        </p>
+        <p>
+          Někde po cestě mi došlo, že mě nebaví natáčení. Baví mě to, co přijde
+          potom — moment, kdy se z hodin materiálu skládá něco, co má tempo a
+          drží pohromadě. Postprodukce není poslední krok výroby videa. Je to
+          krok, ve kterém video buď začne fungovat, nebo ne.
+        </p>
+        <p>
+          Začátky podnikání za nic nestály. Zrušené zakázky na poslední chvíli,
+          nezaplacené faktury, dohody, které existovaly jenom ústně. Dnes je u
+          nás všechno černé na bílém — rozsah, termín, počet kol korektur,
+          cena. Ne kvůli papírování. Kvůli tomu, aby se během projektu řešil
+          střih, a ne kdo co komu slíbil.
+        </p>
+        <p>
+          Vystudoval jsem film a média a jsem analytický typ. Studie o
+          retenci, psychologie pozornosti, data o tom, kde přesně divák
+          odchází — to všechno čtu proto, abych video nedělal jenom hezké, ale
+          funkční. Estetika bez čísel je dekorace. Čísla bez estetiky nikdo
+          nedokouká.
+        </p>
+        <p>
+          Dneska jsem hlavní editor a mám vedle sebe jednoho stálého člověka a
+          další editory v záloze na období, kdy je práce nejvíc. Proto termín,
+          který dostanete, platí.
+        </p>
+        <p>
+          A občas zakázku odmítnu. Když není jasný cíl videa nebo nesedí
+          spolupráce, ani nejlepší editor z toho funkční produkt neudělá — a je
+          poctivější to říct na začátku než po měsíci. Každý projekt proto
+          probírám do detailu předem.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <div class="section-shell" id="sluzby">
+    <Image
+      src={filmstripRoll}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="0.1"
+      width={220}
+      style="top: 0; right: 1.5vw; width: min(220px, 16vw); transform: rotate(4deg);"
+    />
+    <Image
+      src={scissorsCut}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="0.16"
+      width={170}
+      style="bottom: 80px; right: 2.5vw; width: min(170px, 13vw); transform: rotate(-12deg);"
+    />
+    <Image
+      src={scissorsStrip}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="-0.12"
+      width={160}
+      style="bottom: 40px; left: 2vw; width: min(160px, 12vw); transform: rotate(14deg);"
+    />
+
+    <section class="wrap page-section text-section">
+      <h2>Služby</h2>
+
+      <div class="services-grid">
+        <article class="service">
+          <h3>1 — Edit</h3>
+          <p class="lead">
+            Kompletní postprodukce. Od surového materiálu po soubor, který jde
+            rovnou publikovat.
+          </p>
+          <p>
+            Střih, barevné korekce v DaVinci Resolve, zvuk a mix, motion
+            design, titulky. Všechno v jedné službě, ne po položkách — barvy
+            nejsou příplatek, jsou součást práce. Když video vypadá dobře a
+            zní špatně, nefunguje. A obráceně to platí taky.
+          </p>
+          <p>
+            Dělám dokumentární projekty, obsah na sociální sítě, výkonnostní
+            kampaně, reklamy a aftermovie.
+          </p>
+
+          <h4>Jak to probíhá</h4>
+          <p>
+            Materiál nahrajete do sdílené cloudové složky. Stejným místem vám
+            odchází i hotové video. Máte dvě kola velkých korektur — na
+            zásadní změny typu jiný vizuální směr nebo jiná hudba. Drobnosti
+            jako překlep v titulku nebo posunutý střih neomezuju a nepočítám.
+          </p>
+          <p>
+            Termín domlouváme na začátku podle rozsahu projektu. Nechlubím se
+            tím, že jsem rychlý. Chlubím se tím, že termín, který řeknu,
+            platí.
+          </p>
+
+          <h4>Kde se cena hýbe nahoru</h4>
+          <p>
+            Fixní ceník na tuhle práci neexistuje a nebudu předstírat, že ano
+            — hodinový dokument a patnáctivteřinový spot nemají společného
+            skoro nic. Cenu dostanete po tom, co si projekt probereme.
+          </p>
+          <p>Dvě věci ale cenu zvednou vždycky, tak ať to víte předem:</p>
+          <ul class="service-list">
+            <li>
+              — <strong>Náročná motion grafika.</strong> Animované grafy,
+              složitější kompozice, věci stavěné ve Fusion od nuly.
+            </li>
+            <li>
+              — <strong>Vizuální identita videí.</strong> Když ještě nemáte
+              definované, jak mají vaše videa vypadat, umím to postavit.
+              Výstupem je dokument s pravidly — typografie, barvy, přechody,
+              práce s titulky — který si můžete nechat a předat komukoliv
+              dalšímu. Není to vázané na spolupráci se mnou.
+            </li>
+          </ul>
+
+          <a class="btn" href="/#kontakt">Poptat projekt</a>
+        </article>
+
+        <article class="service">
+          <h3>2 — Konzultace</h3>
+          <p class="lead">
+            Máte hotové video, které nefunguje. Nebo ho zrovna stříháte a
+            nejste si jistí.
+          </p>
+          <p>
+            Projdu vaše video a řeknu vám, co ho brzdí. Kde diváci odcházejí a
+            proč. Co je v něm navíc. Co má špatný rytmus, co špatný zvuk, co
+            špatnou stavbu.
+          </p>
+          <p>
+            Není to služba pro moje vlastní projekty — je určená pro
+            materiál, který vznikl jinde. U videa, které jsem stříhal já,
+            dostáváte tenhle úhel pohledu rovnou v ceně Editu.
+          </p>
+
+          <h4>Tři formáty, vyberte si podle toho, jak hluboko chcete jít</h4>
+          <ul class="service-list">
+            <li>
+              <strong>Psaný rozbor</strong> — strukturovaný dokument s
+              konkrétními výtkami a doporučeními. Nejlevnější varianta, dá se
+              poslat dál v týmu.
+            </li>
+            <li>
+              <strong>Videohovor</strong> — 30 minut nad vaším videem. Můžete
+              se ptát, můžeme řešit varianty. Nejlepší, když video ještě není
+              hotové.
+            </li>
+            <li>
+              <strong>Video s komentářem</strong> — nahraný průchod vaším
+              videem s mým komentářem v reálném čase. Vidíte přesně, na co
+              koukám a kde bych sáhl jinam.
+            </li>
+          </ul>
+
+          <h4>Cena</h4>
+          <p>
+            Odvíjí se od délky videa a zvoleného formátu. Pro představu — u
+            třicetivteřinového reelu:
+          </p>
+
+          <table class="price-table">
+            <tbody>
+              <tr><td>Psaný rozbor</td><td>300 Kč</td></tr>
+              <tr><td>Videohovor (30 min)</td><td>700 Kč</td></tr>
+              <tr><td>Video s komentářem</td><td>900 Kč</td></tr>
+            </tbody>
+          </table>
+
+          <p>
+            U delších formátů cena roste s délkou materiálu. Napište mi délku
+            videa a formát, který chcete, a máte cenu obratem.
+          </p>
+
+          <a class="btn" href="/#kontakt">Objednat konzultaci</a>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <div class="section-shell" id="kontakt">
+    <Image
+      src={reelScissors}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="0.1"
+      width={200}
+      style="top: -10px; right: 2vw; width: min(200px, 15vw); transform: rotate(-10deg);"
+    />
+    <Image
+      src={filmstripRoll}
+      alt=""
+      aria-hidden="true"
+      class="bg-decor"
+      data-parallax="-0.1"
+      width={160}
+      style="top: 40px; left: 2.5vw; width: min(160px, 12vw); transform: rotate(10deg);"
+    />
+
+    <section class="wrap page-section text-section">
+      <h2>Máte materiál a termín?</h2>
+      <p>
+        Napište mi, o co jde a dokdy to potřebujete. Ozvu se do druhého dne s
+        tím, jestli to stihnu a co to bude stát.
+      </p>
+      <a class="btn" href="mailto:vojta.malohlava1@gmail.com">Napsat e-mail</a>
+    </section>
   </div>
 </Layout>

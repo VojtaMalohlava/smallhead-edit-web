@@ -1,0 +1,40 @@
+---
+interface Props {
+  project: {
+    title: string;
+    client: string;
+    category: string;
+    format: string;
+    youtubeId: string;
+    description: string;
+  };
+}
+
+const { project } = Astro.props;
+
+const thumbQuality = project.format === "horizontal" ? "maxresdefault" : "hqdefault";
+const thumbUrl = `https://img.youtube.com/vi/${project.youtubeId}/${thumbQuality}.jpg`;
+---
+
+<article class="video-card" data-format={project.format}>
+  <button
+    class="video-card__thumb"
+    type="button"
+    data-yt-id={project.youtubeId}
+    data-yt-title={project.title}
+    aria-label={`Přehrát ukázku: ${project.title}`}
+  >
+    <img src={thumbUrl} alt="" loading="lazy" />
+    <span class="video-card__play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M8 5v14l11-7z"></path>
+      </svg>
+    </span>
+  </button>
+  <div class="video-card__meta">
+    <span class="tag">{project.category}</span>
+    <h3>{project.title}</h3>
+    {project.client && <p class="client">{project.client}</p>}
+    <p class="desc">{project.description}</p>
+  </div>
+</article>

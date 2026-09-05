@@ -25,12 +25,14 @@ Consult these guides before working on related tasks:
 
 - Studio: Smallhead Edit, Vojtěch Malohlava, Brno. Střihová postprodukce.
   Tým: Vojtěch jako hlavní střihač a majitel, plus jeden střihač.
-- Cíl webu: získávat poptávky. Hlavní prvek je showreel na úvodní stránce,
-  YouTube playlist PLJM97r_zQoqU.
+- Cíl webu: získávat poptávky.
 - Barvy: #10443E zelená (pozadí, bloky), #FFD28A medová (akcenty),
-  #615035 hnědá (doplňky), #F7F3EC krémová (podklad obsahu).
-- Písma: Fraunces na nadpisy, Archivo na text, obojí z Google Fonts
-  s podporou české diakritiky.
+  #615035 hnědá (doplňky), #F7F3EC krémová (téměř nepoužívaná, web je
+  celkově tmavý).
+- Písma: Space Grotesk na nadpisy a logo (bezpatkový, moderní), Archivo
+  na běžný text. Obojí z Google Fonts s podporou české diakritiky.
+  Fraunces (serif) se už nepoužívá.
+- Logo v hlavičce je jen "Smallhead" (bez ".Edit").
 - Projekty se VŽDY načítají ze `src/data/projects.js`, nikdy se nepíšou
   natvrdo do stránek.
 - Náhledy videí se berou z img.youtube.com podle youtubeId, žádné
@@ -41,8 +43,34 @@ Consult these guides before working on related tasks:
 STACK: Astro, čisté CSS bez Tailwindu, žádný backend. Výstup musí být
 statický a nasaditelný na Cloudflare Pages.
 
-Schválený vizuální návrh úvodní stránky je v `Podklady/smallhead-edit-prototyp.html`
-— drž se jeho palety, typografie i rozvržení.
+Schválený vizuální návrh v `Podklady/smallhead-edit-prototyp.html` je jen
+výchozí inspirace pro barvy — rozvržení i typografie se od něj už liší
+(viz níže). Návrh inspirovaný webem pfx.teamtailor.com je odložený, neřešit.
+
+## Struktura webu (aktuální rozhodnutí)
+
+- **/** — jedna scrollovací landing page se sekcemi: hero, "Ukázky práce"
+  (3 náhodně vybraná videa), O mně, Služby, Kontakt. Menu na tyto sekce
+  odkazuje kotvami (`/#o-mne`, `/#sluzby`, `/#kontakt`) a zároveň se k nim
+  dá doscrollovat.
+- **/portfolio** — samostatná stránka se všemi projekty (Horizontální
+  formáty + Reels a vertikální formáty), viz `src/data/projects.js`.
+- Sekce "Ukázky práce" na úvodní stránce zobrazuje 1 horizontální a 2
+  vertikální projekt, vybrané NÁHODNĚ při každém načtení stránky (v
+  prohlížeči, z dat vložených do stránky při buildu). Personalizace podle
+  cookies/zájmů uživatele byla zvážena a zamítnuta — web nemá backend ani
+  sledování chování, takže by nebylo z čeho odvodit zájem uživatele, a
+  cookies pro tento účel by navíc vyžadovaly cookie lištu (GDPR).
+- O mně a Služby mají zatím Lorem Ipsum — čeká se na reálný text od klienta.
+- Kontakt má zatím jen odkaz na e-mail. Finální forma (e-mail / Calendly /
+  formulář) je otevřená, klient rozhodne později.
+- Video karty (na úvodní stránce i na /portfolio) reagují na najetí myší:
+  náhled se jemně přiblíží, tlačítko přehrát zvětší a nadpis zbarví do
+  medové — všechno současně, ať to působí jako jedna interakce.
+- V `src/layouts/Layout.astro` je vlastní JS na plynulé scrollování ke
+  kotvám (`scrollIntoView`), NE CSS `scroll-behavior: smooth` na `html` —
+  ta vlastnost v kombinaci s odkazem na kotvu občas úplně shodí skok na
+  cílovou sekci (known Chromium bug). Neřeš to zpátky přes CSS.
 
 ## Pravidla práce, drž se jich po celou dobu
 

@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import VideoCard from "../components/VideoCard.astro";
+import { horizontalProjects, verticalProjects } from "../data/projects";
+---
+
+<Layout title="Portfólio">
+  <div class="wrap page-section">
+    <h1 style="margin-bottom: 3rem;">Portfólio</h1>
+
+    <div class="video-group">
+      <div class="section-head">
+        <h2>Horizontální formáty</h2>
+      </div>
+      <div class="video-grid">
+        {horizontalProjects.map((project) => <VideoCard project={project} />)}
+      </div>
+    </div>
+
+    <div class="video-group">
+      <div class="section-head">
+        <h2>Reels a vertikální formáty</h2>
+      </div>
+      <div class="vertical-grid">
+        {verticalProjects.map((project) => <VideoCard project={project} />)}
+      </div>
+    </div>
+  </div>
+</Layout>
