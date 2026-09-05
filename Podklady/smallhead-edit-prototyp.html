@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smallhead Edit — střihová postprodukce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #10443E;
+    --green-deep: #0B322D;
+    --amber: #FFD28A;
+    --brown: #615035;
+    --cream: #F7F3EC;
+
+    --step-0: 1rem;
+    --step-1: 1.25rem;
+    --step-2: 1.6rem;
+    --step-3: clamp(2rem, 5vw, 3.2rem);
+    --step-4: clamp(2.6rem, 8vw, 5.4rem);
+
+    --gap: 1.5rem;
+    --pad: clamp(1.25rem, 5vw, 4rem);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--green);
+    font-family: "Archivo", system-ui, sans-serif;
+    font-size: var(--step-0);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  a { color: inherit; }
+
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-left: var(--pad);
+    padding-right: var(--pad);
+  }
+
+  /* ---------- Hlavička ---------- */
+
+  .top {
+    background: var(--green);
+    color: var(--cream);
+  }
+
+  .bar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--gap);
+    padding-top: 1.75rem;
+    flex-wrap: wrap;
+  }
+
+  .mark {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .mark span { color: var(--amber); }
+
+  .nav {
+    display: flex;
+    gap: 1.75rem;
+    font-size: 0.95rem;
+  }
+
+  .nav a {
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+  }
+
+  .nav a:hover { border-bottom-color: var(--amber); }
+
+  /* ---------- Hero ---------- */
+
+  .hero { padding: clamp(3rem, 9vw, 6rem) 0 0; }
+
+  .hero-text { max-width: 34ch; }
+
+  .hero h1 {
+    font-size: var(--step-4);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero p {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 46ch;
+    margin: 0;
+    color: #D9E4E0;
+  }
+
+  .reel {
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    position: relative;
+    padding-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .reel-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--green-deep);
+    border: 1px solid rgba(255, 210, 138, 0.35);
+  }
+
+  .reel-frame::after {
+    content: "";
+    position: absolute;
+    inset: 10px -10px -10px 10px;
+    border: 1px solid var(--amber);
+    z-index: -1;
+  }
+
+  .reel-frame iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+  }
+
+  .reel-note {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gap);
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #BFD0CB;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Sekce ---------- */
+
+  .section { padding: clamp(3.5rem, 9vw, 6.5rem) 0; }
+
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--gap);
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .section-head h2 { font-size: var(--step-3); }
+
+  .more {
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-bottom: 1px solid var(--amber);
+    padding-bottom: 2px;
+    white-space: nowrap;
+  }
+
+  /* ---------- Práce ---------- */
+
+  .work-lead { margin-bottom: 2.5rem; }
+
+  .work-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .thumb {
+    display: block;
+    aspect-ratio: 16 / 9;
+    background: var(--green);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .vert-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  .vert-row .thumb { aspect-ratio: 9 / 16; }
+  .vert-row h3 { font-size: var(--step-1); }
+  .vert-row .desc { font-size: 0.925rem; }
+
+  .item h3 {
+    font-size: var(--step-2);
+    margin-bottom: 0.4rem;
+  }
+
+  .work-lead .thumb { margin-bottom: 1.25rem; }
+  .work-lead h3 { font-size: var(--step-3); }
+
+  .client {
+    color: var(--brown);
+    font-size: 0.9rem;
+    margin: 0 0 0.75rem;
+  }
+
+  .item p.desc {
+    margin: 0;
+    max-width: 52ch;
+    color: #3D5A55;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--brown);
+    border: 1px solid rgba(97, 80, 53, 0.3);
+    border-radius: 999px;
+    padding: 0.1rem 0.7rem;
+    margin-bottom: 1rem;
+  }
+
+  /* ---------- Klienti ---------- */
+
+  .clients {
+    background: var(--brown);
+    color: var(--cream);
+  }
+
+  .clients .wrap {
+    padding-top: clamp(2.5rem, 6vw, 3.5rem);
+    padding-bottom: clamp(2.5rem, 6vw, 3.5rem);
+  }
+
+  .clients p.intro {
+    margin: 0 0 1.5rem;
+    color: rgba(247, 243, 236, 0.7);
+    font-size: 0.95rem;
+  }
+
+  .client-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2.5rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: var(--step-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ---------- O mně ---------- */
+
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .portrait {
+    aspect-ratio: 4 / 5;
+    background: var(--green);
+    display: grid;
+    place-items: center;
+    color: rgba(247, 243, 236, 0.45);
+    font-size: 0.8rem;
+  }
+
+  .about h2 {
+    font-size: var(--step-3);
+    margin-bottom: 1.25rem;
+  }
+
+  .about p { max-width: 56ch; }
+
+  /* ---------- Kontakt ---------- */
+
+  .contact {
+    background: var(--green);
+    color: var(--cream);
+  }
+
+  .contact .wrap {
+    padding-top: clamp(3.5rem, 9vw, 6rem);
+    padding-bottom: clamp(3.5rem, 9vw, 6rem);
+  }
+
+  .contact h2 {
+    font-size: var(--step-3);
+    max-width: 20ch;
+    margin-bottom: 1.25rem;
+  }
+
+  .contact p {
+    max-width: 48ch;
+    color: #D9E4E0;
+    margin: 0 0 2rem;
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--amber);
+    color: var(--green);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.9rem 1.75rem;
+    border-radius: 2px;
+  }
+
+  .btn:hover { background: #FFDFA8; }
+
+  /* ---------- Patička ---------- */
+
+  .foot {
+    background: var(--green-deep);
+    color: rgba(247, 243, 236, 0.65);
+    font-size: 0.875rem;
+  }
+
+  .foot .wrap {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gap);
+    flex-wrap: wrap;
+  }
+
+  .foot a { text-decoration: none; border-bottom: 1px solid rgba(255, 210, 138, 0.4); }
+
+  .foot-links { display: flex; gap: 1.5rem; }
+
+  /* ---------- Načtení ---------- */
+
+  .fade {
+    opacity: 0;
+    animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .fade:nth-of-type(2) { animation-delay: 0.1s; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade { animation: none; opacity: 1; }
+  }
+
+  /* ---------- Mobil ---------- */
+
+  @media (max-width: 820px) {
+    .work-row { grid-template-columns: 1fr; gap: 2.5rem; }
+    .vert-row { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .about { grid-template-columns: 1fr; }
+    .portrait { max-width: 280px; }
+    .nav { gap: 1.25rem; font-size: 0.9rem; }
+    .reel-frame::after { inset: 6px -6px -6px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="#">Smallhead<span>.</span>Edit</a>
+      <nav class="nav">
+        <a href="#">Práce</a>
+        <a href="#">Služby</a>
+        <a href="#">O mě</a>
+        <a href="#">Kontakt</a>
+      </nav>
+    </div>
+
+    <div class="hero">
+      <div class="hero-text fade">
+        <h1>Střihová postprodukce z Brna</h1>
+      </div>
+      <p class="fade">Aftermovie, reklama, dokument a obsah pro sociální sítě. Za každým projektem sedím já, Vojta.</p>
+
+      <div class="reel">
+        <div class="reel-frame">
+          <iframe
+            src="https://www.youtube.com/embed/videoseries?list=PLJM97r_zQoqU&rel=0"
+            title="Showreel Smallhead Edit"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+        <div class="reel-note">
+          <span>Showreel</span>
+          <span>16 projektů z posledních sezón</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Vybrané projekty</h2>
+      <a class="more" href="#">Zobrazit všechny</a>
+    </div>
+
+    <article class="item work-lead">
+      <a class="thumb" href="https://www.youtube.com/watch?v=ybyOWrqEKHM" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/ybyOWrqEKHM/maxresdefault.jpg" alt="Defenders Games" loading="lazy"></a>
+      <span class="tag">Aftermovie</span>
+      <h3>Defenders Games</h3>
+      <p class="client">Strongman závod</p>
+      <p class="desc">Silový závod, kde je energie v každém záběru, takže největší výzva byla nevyčerpat diváka hned na začátku. Napětí jsem držel dole a nechal ho vystoupat až k závěrečnému pokusu, který nese celé video.</p>
+    </article>
+
+    <div class="work-row">
+      <article class="item">
+        <a class="thumb" href="https://www.youtube.com/watch?v=zMP3s14Qbmg" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/zMP3s14Qbmg/maxresdefault.jpg" alt="Vesalius" loading="lazy"></a>
+        <span class="tag">Reklama</span>
+        <h3>Vesalius</h3>
+        <p class="client">Lékařská společnost</p>
+        <p class="desc">Propagační video, které nemělo znít jako reklama. Dokumentární tón postavený na výpovědích lidí před kamerou.</p>
+      </article>
+
+      <article class="item">
+        <a class="thumb" href="https://www.youtube.com/watch?v=aKM5jVf4PEY" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/aKM5jVf4PEY/maxresdefault.jpg" alt="Hardstyle festival" loading="lazy"></a>
+        <span class="tag">Reklama</span>
+        <h3>Hardstyle festival</h3>
+        <p class="client">pro TMRW Film</p>
+        <p class="desc">Tvrdší nástupy a delší výdrž na klíčových záběrech, aby video mělo vlastní tvář.</p>
+      </article>
+
+      <article class="item">
+        <a class="thumb" href="https://www.youtube.com/watch?v=V88l0I-wYu0" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/V88l0I-wYu0/maxresdefault.jpg" alt="DNB festival" loading="lazy"></a>
+        <span class="tag">Reklama</span>
+        <h3>DNB festival</h3>
+        <p class="client">pro TMRW Film</p>
+        <p class="desc">Hodně efektů, co nejrychlejší střih. Rytmus jsem stavěl přímo na stopu, ne na obraz.</p>
+      </article>
+    </div>
+
+    <div class="section-head" style="margin-top: 4.5rem;">
+      <h2>Vertikální formáty</h2>
+    </div>
+
+    <div class="vert-row">
+      <article class="item">
+        <a class="thumb" href="https://www.youtube.com/watch?v=aQE5ZHHjApo" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/aQE5ZHHjApo/hqdefault.jpg" alt="Pokeccce" loading="lazy"></a>
+        <span class="tag">Sociální sítě</span>
+        <h3>Pokeccce</h3>
+        <p class="client">YouTube</p>
+        <p class="desc">Efekt jako nástroj, ne ozdoba. Přes 1,2 milionu zhlédnutí.</p>
+      </article>
+      <article class="item">
+        <a class="thumb" href="https://www.youtube.com/watch?v=shkuKFece08" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/shkuKFece08/hqdefault.jpg" alt="Choice" loading="lazy"></a>
+        <span class="tag">Reklama</span>
+        <h3>Choice</h3>
+        <p class="client">se Zdeňkem Polreichem</p>
+        <p class="desc">Minimalismus jako zadání i jako řešení. Žádné efekty navíc.</p>
+      </article>
+      <article class="item">
+        <a class="thumb" href="https://www.youtube.com/watch?v=mo34ZcLp7dg" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/mo34ZcLp7dg/hqdefault.jpg" alt="Placement" loading="lazy"></a>
+        <span class="tag">Sociální sítě</span>
+        <h3>Placement</h3>
+        <p class="client">Marketingová agentura</p>
+        <p class="desc">Designové titulky drží identitu, video zůstává přirozené.</p>
+      </article>
+      <article class="item">
+        <a class="thumb" href="https://www.youtube.com/watch?v=__uWeFEQYD0" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/__uWeFEQYD0/hqdefault.jpg" alt="Dotykačka" loading="lazy"></a>
+        <span class="tag">Reklama</span>
+        <h3>Dotykačka</h3>
+        <p class="client">Výkonnostní kampaň</p>
+        <p class="desc">První dvě sekundy musí zastavit scrollování.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="clients">
+  <div class="wrap">
+    <p class="intro">Pracoval jsem pro</p>
+    <ul class="client-list">
+      <li>North Moravians</li>
+      <li>TMRW Film</li>
+      <li>Vesalius</li>
+      <li>Dotykačka</li>
+      <li>Placement</li>
+      <li>Perfectology Brno</li>
+      <li>Choice</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap about">
+    <div class="portrait">[fotka]</div>
+    <div>
+      <h2>Mluvíte přímo se mnou</h2>
+      <p>Nejsem agentura s account managerem. Zadání si beru osobně, stříhám ho sám a odpovídám vám na zprávy já. Když se něco potřebuje doladit na poslední chvíli, nejde to přes tři lidi.</p>
+      <p>Ve studiu jsme dva, což znamená dost kapacity na běžící kampaň a zároveň žádný telefonní seznam mezi vámi a člověkem u střižny.</p>
+    </div>
+  </div>
+</section>
+
+<section class="contact">
+  <div class="wrap">
+    <h2>Máte materiál a termín?</h2>
+    <p>Napište mi, o co jde a dokdy to potřebujete. Ozvu se do druhého dne s tím, jestli to stihnu a co to bude stát.</p>
+    <a class="btn" href="mailto:vojta.malohlava1@gmail.com">Napsat e-mail</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>
+      Smallhead Edit, Vojtěch Malohlava<br>
+      IČO 21636206
+    </div>
+    <div class="foot-links">
+      <a href="#">Ochrana osobních údajů</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
