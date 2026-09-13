@@ -1,0 +1,52 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import portrait from "../assets/vojta-portret.jpg";
+---
+
+<Layout title="O mně">
+  <section class="wrap page-section text-section about">
+    <div class="about-portrait">
+      <Image src={portrait} alt="Vojtěch Malohlava" width={640} height={800} />
+    </div>
+    <div class="about-content">
+      <h1 style="font-size: var(--step-3); margin-bottom: 1.5rem;">O mně</h1>
+      <p>Nezačal jsem střihem. Začal jsem tím, že jsem chtěl něco ukázat.</p>
+      <p>
+        Vlogy z vesnice. Potom sestřihy z fotbalu. Roky předtím, než mě
+        napadlo, že by z toho mohla být práce.
+      </p>
+      <p>
+        Někde po cestě mi došlo, že mě nebaví natáčení. Baví mě to, co přijde
+        potom — moment, kdy se z hodin materiálu skládá něco, co má tempo a
+        drží pohromadě. Postprodukce není poslední krok výroby videa. Je to
+        krok, ve kterém video buď začne fungovat, nebo ne.
+      </p>
+      <p>
+        Začátky podnikání za nic nestály. Zrušené zakázky na poslední chvíli,
+        nezaplacené faktury, dohody, které existovaly jenom ústně. Dnes je u
+        nás všechno černé na bílém — rozsah, termín, počet kol korektur,
+        cena. Ne kvůli papírování. Kvůli tomu, aby se během projektu řešil
+        střih, a ne kdo co komu slíbil.
+      </p>
+      <p>
+        Vystudoval jsem film a média a jsem analytický typ. Studie o
+        retenci, psychologie pozornosti, data o tom, kde přesně divák
+        odchází — to všechno čtu proto, abych video nedělal jenom hezké, ale
+        funkční. Estetika bez čísel je dekorace. Čísla bez estetiky nikdo
+        nedokouká.
+      </p>
+      <p>
+        Dneska jsem hlavní editor a mám vedle sebe jednoho stálého člověka a
+        další editory v záloze na období, kdy je práce nejvíc. Proto termín,
+        který dostanete, platí.
+      </p>
+      <p>
+        A občas zakázku odmítnu. Když není jasný cíl videa nebo nesedí
+        spolupráce, ani nejlepší editor z toho funkční produkt neudělá — a je
+        poctivější to říct na začátku než po měsíci. Každý projekt proto
+        probírám do detailu předem.
+      </p>
+    </div>
+  </section>
+</Layout>

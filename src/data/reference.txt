@@ -1,0 +1,32 @@
+# Zdroj recenzí pro posuvník "Co o nás říkají zákazníci" na hlavní stránce.
+#
+# Formát jedné recenze:
+#   Jméno: Jméno a příjmení (nebo firma)
+#   Typ: profese / pozice klienta
+#   Text recenze (klidně na víc řádků i s prázdnými řádky mezi odstavci)
+#
+# Novou recenzi poznáš podle řádku "Jméno:" — nemusíš mezi recenze dávat
+# prázdný řádek, stačí začít další recenzi řádkem "Jméno:". Klidně sem
+# přidávej další recenze stejným způsobem — na webu se objeví automaticky,
+# včetně nové tečky a ikony v posuvníku.
+
+Jméno: Adam Širota
+Typ: Marketingový specialista
+S Vojtom spolupracujeme na strihu mojich aj klientskych videi a som maximalne spokojny. Vie pochopit moju predstavu a pretavit ju do kvalitneho vysledku bez zbytocneho vysvetlovania. Strih je dynamicky, moderny a vzdy dodany spolahlivo. Urcite odporucam kazdemu, kto hlada kvalitneho a sikovneho editora.
+
+Jméno: Placement (Karolína)
+Typ: Marketingová agentura
+S Vojtou se nám spolupracuje skvěle. Je rychlý, spolehlivý a videa nám zvládá dodat opravdu obratem. Zadání vždy splní, připomínky rychle zapracuje a komunikace s ním je jednoduchá a bez zbytečného dohadování.
+
+Zvládne pomoct i ve chvíli, kdy potřebujeme něco vyřešit ASAP.
+S celkovým zpracováním videí jsme moc spokojení.
+
+Pokud hledáte šikovného střihače, na kterého je spoleh, Vojtu určitě doporučujeme.
+
+Jméno: David
+Typ: Realitní makléř
+Se zpracováním i produkcí několika mých promo videí jsem byl velice spokojen. Práce byla odevzdána k datu domluveného termínu, což velice oceňuji. Kvalita videí byla rovněž na skvělé úrovni.
+
+Jméno: TMRW Film
+Typ: Filmová/video produkce
+S Vojtou spolupracujeme na projektech, kde potřebujeme spolehlivou postprodukční kapacitu. Nemusíme vysvětlovat dvakrát: pochopí zadání i situaci, kterou má video řešit, a podle toho ke střihu přistoupí. Termíny drží, a když se něco mění za pochodu, ozve se sám včas. Jeho střih má tempo a drží pozornost, zároveň sedí do stylu, který projekt potřebuje.

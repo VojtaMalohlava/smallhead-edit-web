@@ -29,6 +29,12 @@ const currentPath = Astro.url.pathname;
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      // Musí běžet synchronně před vykreslením <body>, jinak by se sekce
+      // schovaly (viz CSS .js .section-shell) a bez JS by zůstaly navždy
+      // neviditelné.
+      document.documentElement.classList.add("js");
+    </script>
   </head>
   <body>
     <header class="top">
@@ -95,25 +101,28 @@ const currentPath = Astro.url.pathname;
         button.replaceWith(iframe);
       });
 
-      const parallaxEls = Array.from(document.querySelectorAll(".bg-decor")).filter(
-        (el) => el instanceof HTMLElement && el.dataset.parallax,
+      const parallaxEls = Array.from(document.querySelectorAll("[data-parallax]")).filter(
+        (el) => el instanceof HTMLElement,
       );
 
-      if (parallaxEls.length) {
+      if (parallaxEls.length && !prefersReducedMotion) {
         parallaxEls.forEach((el) => {
           if (!(el instanceof HTMLElement)) return;
-          const match = el.style.transform.match(/rotate\([^)]+\)/);
-          el.dataset.baseTransform = match ? match[0] : "";
+          // Zachytí libovolný existující transform (rotace, statický posun
+          // kvůli přesahu přes hranici sekcí…), paralaxa se na něj jen přičte.
+          el.dataset.baseTransform = el.style.transform || "";
         });
 
         const updateParallax = () => {
           parallaxEls.forEach((el) => {
             if (!(el instanceof HTMLElement)) return;
             const speed = parseFloat(el.dataset.parallax || "0");
+            const max = el.dataset.parallaxMax ? parseFloat(el.dataset.parallaxMax) : Infinity;
             const parent = el.parentElement;
             if (!parent) return;
             const parentTop = parent.getBoundingClientRect().top;
-            el.style.transform = `${el.dataset.baseTransform} translateY(${parentTop * speed}px)`;
+            const offset = Math.max(-max, Math.min(max, parentTop * speed));
+            el.style.transform = `${el.dataset.baseTransform} translateY(${offset}px)`.trim();
           });
         };
 
@@ -122,6 +131,22 @@ const currentPath = Astro.url.pathname;
         window.addEventListener("scroll", updateParallax, { passive: true });
         window.addEventListener("resize", updateParallax);
         updateParallax();
+      }
+
+      // Odkrývání sekcí při scrollování — jednorázově, nikdy se neopakuje.
+      if (!prefersReducedMotion && "IntersectionObserver" in window) {
+        const revealEls = document.querySelectorAll(".section-shell");
+        const revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add("is-visible");
+              revealObserver.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.15 },
+        );
+        revealEls.forEach((el) => revealObserver.observe(el));
       }
     </script>
   </body>
