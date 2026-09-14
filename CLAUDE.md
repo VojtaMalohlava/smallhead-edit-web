@@ -50,20 +50,22 @@ výchozí inspirace pro barvy — rozvržení i typografie se od něj už liší
 ## Struktura webu (aktuální rozhodnutí)
 
 - **/** — jedna scrollovací landing page se sekcemi: hero, "Ukázky práce"
-  (3 náhodně vybraná videa), O mně, Služby, Kontakt. Menu na tyto sekce
-  odkazuje kotvami (`/#o-mne`, `/#sluzby`, `/#kontakt`) a zároveň se k nim
-  dá doscrollovat.
+  (4 náhodně vybraná videa), Klienti, O mně, Reference, Služby, Kontakt.
+  Menu na tyto sekce odkazuje kotvami (`/#o-mne`, `/#sluzby`, `/#kontakt`)
+  a zároveň se k nim dá doscrollovat.
 - **/portfolio** — samostatná stránka se všemi projekty (Horizontální
   formáty + Reels a vertikální formáty), viz `src/data/projects.js`.
-- Sekce "Ukázky práce" na úvodní stránce zobrazuje 1 horizontální a 2
-  vertikální projekt, vybrané NÁHODNĚ při každém načtení stránky (v
+- Sekce "Ukázky práce" na úvodní stránce zobrazuje 1 horizontální a 3
+  vertikální projekty, vybrané NÁHODNĚ při každém načtení stránky (v
   prohlížeči, z dat vložených do stránky při buildu). Personalizace podle
   cookies/zájmů uživatele byla zvážena a zamítnuta — web nemá backend ani
   sledování chování, takže by nebylo z čeho odvodit zájem uživatele, a
   cookies pro tento účel by navíc vyžadovaly cookie lištu (GDPR).
-- O mně a Služby mají zatím Lorem Ipsum — čeká se na reálný text od klienta.
-- Kontakt má zatím jen odkaz na e-mail. Finální forma (e-mail / Calendly /
-  formulář) je otevřená, klient rozhodne později.
+- O mně a Služby mají hotový reálný text od klienta.
+- Kontakt má poptávkový formulář (`src/components/ContactForm.astro`),
+  odesílá se přes Formcarry (endpoint a doména webu jsou v
+  `src/data/site.js`). Pod formulářem zůstává i degradovaný textový
+  odkaz na e-mail pro klienty, kteří chtějí napsat rovnou.
 - Video karty (na úvodní stránce i na /portfolio) reagují na najetí myší:
   náhled se jemně přiblíží, tlačítko přehrát zvětší a nadpis zbarví do
   medové — všechno současně, ať to působí jako jedna interakce.
