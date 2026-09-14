@@ -77,6 +77,13 @@ const typKlientaOptions = [
       <input id={id("website")} name="website" type="text" tabindex="-1" autocomplete="off" />
     </div>
 
+    {/*
+      Formcarryho vlastní honeypot (viz jejich dokumentace) — funguje na
+      jejich straně i pro požadavky, které by šly rovnou na endpoint a
+      obešly by tuhle stránku i náš JS.
+    */}
+    <input type="hidden" name="_gotcha" tabindex="-1" autocomplete="off" />
+
     <p class="form-submit-error" role="alert" hidden>
       Odeslání se nepovedlo. Zkuste to prosím znovu, nebo mi napište přímo na e-mail níž.
     </p>
@@ -172,7 +179,7 @@ const typKlientaOptions = [
       const successBlock = form.parentElement?.querySelector(".form-success") ?? null;
 
       const fields = Array.from(form.querySelectorAll<FormField>("input, select, textarea")).filter(
-        (el) => el !== honeypot,
+        (el) => el !== honeypot && el.name !== "_gotcha",
       );
 
       fields.forEach((field) => {
