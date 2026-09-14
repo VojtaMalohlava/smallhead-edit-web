@@ -199,7 +199,10 @@ a:focus-visible, button:focus-visible {
 .hero {
   position: relative;
   z-index: 1;
-  padding: var(--space-lg) 0 var(--space-xl);
+  /* Longhand jen top/bottom — viz vysvětlení u .page-section, stejná
+     past se zkráceným zápisem "padding: X 0 Y" na prvku s .wrap. */
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-xl);
 }
 
 .hero h1 {
@@ -514,7 +517,10 @@ a:focus-visible, button:focus-visible {
 /* ---------- Pruh klientů ---------- */
 
 .clients-strip {
-  padding: var(--space-lg) 0;
+  /* Longhand jen top/bottom — viz vysvětlení u .page-section, stejná
+     past se zkráceným zápisem "padding: X 0" na prvku s .wrap. */
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
 }
 
 .clients-intro {
@@ -649,7 +655,7 @@ a:focus-visible, button:focus-visible {
   .about-content {
     position: relative;
     z-index: 1;
-    margin-left: clamp(-4rem, -6vw, -2rem);
+    margin-left: clamp(-2.25rem, -3vw, -1rem);
   }
 }
 
