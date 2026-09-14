@@ -715,7 +715,12 @@ a:focus-visible, button:focus-visible {
   z-index: 9998;
   pointer-events: none;
   opacity: var(--grain-opacity);
-  mix-blend-mode: overlay;
+  /* "overlay" byl na tomhle skoro celém tmavém webu prakticky
+     neviditelný — na moc tmavém podkladu (#10443E apod.) násobí
+     šum směrem k nule, takže rozdíl proti pozadí je jen o pár
+     jednotek. "screen" šum spolehlivě zesvětluje i na velmi tmavém
+     pozadí, takže zrno je skutečně vidět. */
+  mix-blend-mode: screen;
   background-repeat: repeat;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain-noise)'/%3E%3C/svg%3E");
 }
