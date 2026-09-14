@@ -4,110 +4,13 @@ import Layout from "../layouts/Layout.astro";
 import Timeline from "../components/Timeline.astro";
 import SectionMarker from "../components/SectionMarker.astro";
 import { featuredProjects, horizontalProjects } from "../data/projects";
+import { references } from "../data/references";
 import portrait from "../assets/vojta-portret.jpg";
-import referenceRaw from "../data/reference.txt?raw";
 
 // Video na pozadí hera: projekt označený `heroBackground: true` v
 // projects.js, jinak první horizontální projekt v poli.
 const heroProject = horizontalProjects.find((p) => p.heroBackground) ?? horizontalProjects[0];
 const heroPosterUrl = `https://img.youtube.com/vi/${heroProject.youtubeId}/maxresdefault.jpg`;
-
-type Testimonial = { name: string; role: string; quote: string };
-
-// Soubor src/data/reference.txt: každá nová recenze začíná řádkem "Jméno:"
-// (nezáleží na prázdných řádcích mezi recenzemi ani uvnitř textu recenze),
-// následuje řádek "Typ:" a pak samotný text. Řádky s # se přeskakují.
-function parseTestimonials(raw: string): Testimonial[] {
-  const entries: string[][] = [];
-  let current: string[] | null = null;
-
-  for (const rawLine of raw.split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line || line.startsWith("#")) continue;
-    if (/^jm[ée]no:/i.test(line)) {
-      current = [line];
-      entries.push(current);
-    } else if (current) {
-      current.push(line);
-    }
-  }
-
-  return entries
-    .map((lines) => {
-      const nameLine = lines[0];
-      const roleLine = lines.find((line) => /^typ:/i.test(line));
-      if (!roleLine) return null;
-      const quote = lines
-        .slice(1)
-        .filter((line) => line !== roleLine)
-        .join(" ")
-        .trim();
-      if (!quote) return null;
-      return {
-        name: nameLine.replace(/^jm[ée]no:/i, "").trim(),
-        role: roleLine.replace(/^typ:/i, "").trim(),
-        quote,
-      };
-    })
-    .filter((item): item is Testimonial => item !== null);
-}
-
-function stripDiacritics(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .toLowerCase();
-}
-
-// Minimalistické ikonky na pozadí avataru podle profese z pole "Typ:".
-// Neznámá profese dostane neutrální výchozí ikonu (jiskřičku).
-const AVATAR_ICONS: { match: RegExp; icon: string }[] = [
-  {
-    match: /market/,
-    icon: `<rect x="16" y="38" width="6" height="12" rx="1"/><rect x="26" y="30" width="6" height="20" rx="1"/><rect x="36" y="22" width="6" height="28" rx="1"/>`,
-  },
-  {
-    match: /realit|makler/,
-    icon: `<path d="M14 30 L32 16 L50 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="20" y="30" width="24" height="18" fill="none" stroke="currentColor" stroke-width="2.5"/>`,
-  },
-  {
-    match: /fitness|trener|kouc/,
-    icon: `<g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M14 32h6M44 32h6M20 32h24"/><rect x="10" y="27" width="6" height="10" rx="1"/><rect x="48" y="27" width="6" height="10" rx="1"/></g>`,
-  },
-  {
-    match: /program|vyvoj|it |developer|tech/,
-    icon: `<g stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M24 24 L16 32 L24 40"/><path d="M40 24 L48 32 L40 40"/></g>`,
-  },
-  {
-    match: /e-?shop|obchod|prodej/,
-    icon: `<g stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 24h28l-3 20H21z"/><path d="M24 24v-4a8 8 0 0 1 16 0v4"/></g>`,
-  },
-  {
-    match: /foto/,
-    icon: `<g stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="24" width="36" height="24" rx="3"/><circle cx="32" cy="36" r="7"/><path d="M24 24l3-5h10l3 5"/></g>`,
-  },
-  {
-    match: /film|video|produkc/,
-    icon: `<g stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="22" width="40" height="26" rx="2"/><path d="M12 30h40M18 22l4 8M28 22l4 8M38 22l4 8"/></g>`,
-  },
-];
-
-const DEFAULT_ICON = `<g stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M32 16v8M32 40v8M16 32h8M40 32h8M21 21l6 6M37 37l6 6M43 21l-6 6M27 37l-6 6"/></g>`;
-
-function avatarSvg(role: string) {
-  const normalized = stripDiacritics(role);
-  const match = AVATAR_ICONS.find((entry) => entry.match.test(normalized));
-  const icon = match ? match.icon : DEFAULT_ICON;
-  return `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
-    <g opacity="0.45">${icon}</g>
-    <g fill="currentColor">
-      <circle cx="32" cy="23" r="10"/>
-      <path d="M14 54c0-12.7 8.1-20 18-20s18 7.3 18 20z"/>
-    </g>
-  </svg>`;
-}
-
-const testimonials = parseTestimonials(referenceRaw);
 
 const pickerFields = ({ title, client, category, format, youtubeId, description }: (typeof featuredProjects)[number]) => ({
   title,
@@ -311,113 +214,29 @@ const pickerData = {
       <div class="section-heading">
         <h2>Co o nás říkají zákazníci</h2>
       </div>
-      <div class="testimonial-carousel">
-        {testimonials.length > 1 && (
-          <button class="carousel-btn carousel-btn--prev" type="button" aria-label="Předchozí hodnocení">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-        )}
-
-        <div class="testimonial-stage" id="testimonial-stage">
-          {testimonials.map((item) => (
-            <blockquote class="testimonial">
+      <div class="references-grid">
+        {references.map((item) => (
+          <article class="reference-card">
+            <div class="reference-illustration" aria-hidden="true">
+              <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+                <g fill="currentColor">
+                  <circle cx="32" cy="23" r="10" />
+                  <path d="M14 54c0-12.7 8.1-20 18-20s18 7.3 18 20z" />
+                </g>
+              </svg>
+            </div>
+            <blockquote>
               <p>„{item.quote}“</p>
-              <footer>
-                <div class="testimonial-avatar" set:html={avatarSvg(item.role)} />
-                <div class="testimonial-who">
-                  <span class="testimonial-name">{item.name}</span>
-                  <span class="testimonial-role">{item.role}</span>
-                </div>
-              </footer>
             </blockquote>
-          ))}
-        </div>
-
-        {testimonials.length > 1 && (
-          <button class="carousel-btn carousel-btn--next" type="button" aria-label="Další hodnocení">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 18l6-6-6-6" />
-            </svg>
-          </button>
-        )}
+            <footer>
+              <span class="reference-type">{item.type}</span>
+              <span class="reference-name">{item.name}</span>
+            </footer>
+          </article>
+        ))}
       </div>
-
-      {testimonials.length > 1 && (
-        <div class="carousel-dots" id="testimonial-dots" role="tablist" aria-label="Vyberte hodnocení">
-          {testimonials.map((_, i) => (
-            <button
-              class="carousel-dot"
-              type="button"
-              aria-label={`Hodnocení ${i + 1}`}
-              aria-current={i === 0 ? "true" : "false"}
-            />
-          ))}
-        </div>
-      )}
     </section>
   </div>
-
-  <script is:inline>
-    (() => {
-      const stage = document.getElementById("testimonial-stage");
-      if (!stage) return;
-
-      const slides = Array.from(stage.children);
-      const dotsWrap = document.getElementById("testimonial-dots");
-      const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
-      const prevBtn = document.querySelector(".carousel-btn--prev");
-      const nextBtn = document.querySelector(".carousel-btn--next");
-      const total = slides.length;
-
-      // Vybere náhodnou recenzi jako první, ale nikdy stejnou jako
-      // naposledy (uloženo v localStorage, přežije i reload stránky).
-      const STORAGE_KEY = "smallhead-last-testimonial";
-      let current = Math.floor(Math.random() * total);
-      if (total > 1) {
-        let lastIndex = -1;
-        try {
-          lastIndex = parseInt(localStorage.getItem(STORAGE_KEY) || "-1", 10);
-        } catch (e) {}
-        const choices = [];
-        for (let i = 0; i < total; i++) {
-          if (i !== lastIndex) choices.push(i);
-        }
-        current = choices[Math.floor(Math.random() * choices.length)];
-      }
-      try {
-        localStorage.setItem(STORAGE_KEY, String(current));
-      } catch (e) {}
-
-      function render() {
-        slides.forEach((slide, i) => {
-          slide.classList.remove("is-active", "is-prev", "is-next");
-          slide.setAttribute("aria-hidden", "true");
-          if (i === current) {
-            slide.classList.add("is-active");
-            slide.setAttribute("aria-hidden", "false");
-          } else if (i === (current - 1 + total) % total) {
-            slide.classList.add("is-prev");
-          } else if (i === (current + 1) % total) {
-            slide.classList.add("is-next");
-          }
-        });
-        dots.forEach((dot, i) => dot.setAttribute("aria-current", i === current ? "true" : "false"));
-      }
-
-      function goTo(index) {
-        current = ((index % total) + total) % total;
-        render();
-      }
-
-      if (prevBtn) prevBtn.addEventListener("click", () => goTo(current - 1));
-      if (nextBtn) nextBtn.addEventListener("click", () => goTo(current + 1));
-      dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i)));
-
-      render();
-    })();
-  </script>
 
   <div class="section-shell section--green" id="sluzby">
     <section class="wrap page-section text-section">
