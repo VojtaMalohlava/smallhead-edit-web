@@ -1,0 +1,21 @@
+---
+// Jeden bod na časové ose (viz Timeline.astro): timecode + název sekce.
+// Na desktopu (>=1024px) sedí jako tečka a dvouřádkový popisek přímo na
+// svislé lince Timeline. Na mobilu/tabletu je to samostatný řádek nad
+// nadpisem sekce, s krátkou linkou vlevo místo tečky.
+interface Props {
+  time: string;
+  label: string;
+}
+
+const { time, label } = Astro.props;
+---
+
+<div class="section-marker">
+  <span class="section-marker__dot" aria-hidden="true"></span>
+  <span class="section-marker__text">
+    <span class="section-marker__time">{time}</span>
+    <span class="section-marker__sep" aria-hidden="true">/</span>
+    <span class="section-marker__label">{label}</span>
+  </span>
+</div>

@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import Timeline from "../components/Timeline.astro";
+import SectionMarker from "../components/SectionMarker.astro";
 import { featuredProjects, horizontalProjects } from "../data/projects";
 import portrait from "../assets/vojta-portret.jpg";
 import referenceRaw from "../data/reference.txt?raw";
@@ -131,6 +133,7 @@ const pickerData = {
     </div>
 
     <div class="wrap hero">
+      <SectionMarker time="00:00" label="Úvod" />
       <div class="hero-text">
         <h1>Materiál máte natočený. My zařídíme, aby výsledek fungoval.</h1>
       </div>
@@ -172,11 +175,15 @@ const pickerData = {
     })();
   </script>
 
+  <Timeline>
   <div class="section-shell section--cream" id="ukazky">
     <section class="wrap page-section">
       <div class="section-head">
-        <div class="section-heading">
-          <h2>Ukázky práce</h2>
+        <div>
+          <SectionMarker time="00:01" label="Ukázky práce" />
+          <div class="section-heading">
+            <h2>Ukázky práce</h2>
+          </div>
         </div>
         <a class="more" href="/portfolio">Zobrazit celé portfólio</a>
       </div>
@@ -278,6 +285,7 @@ const pickerData = {
         <Image src={portrait} alt="Vojtěch Malohlava" width={640} height={800} />
       </div>
       <div class="about-content">
+        <SectionMarker time="00:02" label="O mně" />
         <div class="section-heading">
           <h2>O mně</h2>
         </div>
@@ -299,6 +307,7 @@ const pickerData = {
 
   <div class="section-shell section--brown" id="reference">
     <section class="wrap page-section text-section">
+      <SectionMarker time="00:03" label="Reference" />
       <div class="section-heading">
         <h2>Co o nás říkají zákazníci</h2>
       </div>
@@ -412,6 +421,7 @@ const pickerData = {
 
   <div class="section-shell section--green" id="sluzby">
     <section class="wrap page-section text-section">
+      <SectionMarker time="00:04" label="Služby" />
       <div class="section-heading">
         <h2>Služby</h2>
       </div>
@@ -448,6 +458,7 @@ const pickerData = {
 
   <div class="section-shell section--brown" id="kontakt">
     <section class="wrap page-section text-section">
+      <SectionMarker time="00:05" label="Kontakt" />
       <div class="section-heading">
         <h2>Máte materiál a termín?</h2>
       </div>
@@ -458,4 +469,5 @@ const pickerData = {
       <a class="btn" href="mailto:vojta.malohlava1@gmail.com">Napsat e-mail</a>
     </section>
   </div>
+  </Timeline>
 </Layout>

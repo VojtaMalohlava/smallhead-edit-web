@@ -1,29 +1,39 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import VideoCard from "../components/VideoCard.astro";
+import Timeline from "../components/Timeline.astro";
+import SectionMarker from "../components/SectionMarker.astro";
 import { horizontalProjects, verticalProjects } from "../data/projects";
 ---
 
 <Layout title="Portfólio">
-  <div class="wrap page-section">
-    <h1 style="margin-bottom: 3rem;">Portfólio</h1>
+  <Timeline>
+    <div class="wrap page-section">
+      <h1 style="margin-bottom: 3rem;">Portfólio</h1>
 
-    <div class="video-group">
-      <div class="section-head">
-        <h2>Horizontální formáty</h2>
+      <div class="video-group">
+        <div class="section-head">
+          <div>
+            <SectionMarker time="00:01" label="Horizontální formáty" />
+            <h2>Horizontální formáty</h2>
+          </div>
+        </div>
+        <div class="video-grid">
+          {horizontalProjects.map((project) => <VideoCard project={project} />)}
+        </div>
       </div>
-      <div class="video-grid">
-        {horizontalProjects.map((project) => <VideoCard project={project} />)}
+
+      <div class="video-group">
+        <div class="section-head">
+          <div>
+            <SectionMarker time="00:02" label="Reels a vertikální formáty" />
+            <h2>Reels a vertikální formáty</h2>
+          </div>
+        </div>
+        <div class="vertical-grid">
+          {verticalProjects.map((project) => <VideoCard project={project} />)}
+        </div>
       </div>
     </div>
-
-    <div class="video-group">
-      <div class="section-head">
-        <h2>Reels a vertikální formáty</h2>
-      </div>
-      <div class="vertical-grid">
-        {verticalProjects.map((project) => <VideoCard project={project} />)}
-      </div>
-    </div>
-  </div>
+  </Timeline>
 </Layout>
