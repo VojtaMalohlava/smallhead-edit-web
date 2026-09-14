@@ -735,61 +735,22 @@ a:focus-visible, button:focus-visible {
   gap: 1.5rem;
 }
 
-/* ---------- Dekorativní obrázky na pozadí ---------- */
+/* ---------- Vrstvení a hloubka ---------- */
 
 .section-shell {
   position: relative;
   /* Vytvoří vlastní stacking context, aby záporný z-index dekorativních
-     prvků (bg-decor, section-number) zůstal uvnitř téhle sekce a
-     nezmizel pod pozadím úplně jiné části stránky. */
+     prvků zůstal uvnitř téhle sekce a nezmizel pod pozadím úplně jiné
+     části stránky. */
   isolation: isolate;
 }
-
-.bg-decor {
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
-  opacity: 0.08;
-  filter: grayscale(1) invert(1) sepia(0.4) saturate(2);
-  mix-blend-mode: screen;
-}
-
-@media (max-width: 700px) {
-  .bg-decor {
-    display: none;
-  }
-}
-
-/* ---------- Vrstvení a hloubka ---------- */
 
 .section-heading {
   position: relative;
   display: inline-block;
 }
 
-.section-number {
-  position: absolute;
-  top: 50%;
-  left: -0.2em;
-  transform: translateY(-50%);
-  font-family: "Space Grotesk", system-ui, sans-serif;
-  font-size: clamp(6rem, 15vw, 12rem);
-  font-weight: 700;
-  line-height: 1;
-  color: var(--section-accent, var(--amber));
-  opacity: 0.08;
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
-  white-space: nowrap;
-}
-
 @media (max-width: 700px) {
-  .section-number {
-    display: none;
-  }
-
   /* Základní posun je inline (kvůli JS paralaxe, viz Layout.astro),
      proto ho tu musíme přebít přes !important. */
   .bleed-up {

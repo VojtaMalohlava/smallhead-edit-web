@@ -3,10 +3,6 @@ import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { featuredProjects, horizontalProjects } from "../data/projects";
 import portrait from "../assets/vojta-portret.jpg";
-import scissorsStrip from "../assets/decor/scissors-strip.png";
-import reelScissors from "../assets/decor/reel-scissors.png";
-import filmstripRoll from "../assets/decor/filmstrip-roll.webp";
-import scissorsCut from "../assets/decor/scissors-cut.png";
 import referenceRaw from "../data/reference.txt?raw";
 
 // Video na pozadí hera: projekt označený `heroBackground: true` v
@@ -177,30 +173,10 @@ const pickerData = {
   </script>
 
   <div class="section-shell section--cream" id="ukazky">
-    <Image
-      src={scissorsCut}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="0.12"
-      width={200}
-      style="top: 20px; right: 2vw; width: min(200px, 15vw); transform: rotate(10deg);"
-    />
-    <Image
-      src={filmstripRoll}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="-0.1"
-      width={170}
-      style="bottom: 40px; left: 2vw; width: min(170px, 13vw); transform: rotate(-8deg);"
-    />
-
     <section class="wrap page-section">
       <div class="section-head">
         <div class="section-heading">
           <h2>Ukázky práce</h2>
-          <span class="section-number" aria-hidden="true">01</span>
         </div>
         <a class="more" href="/portfolio">Zobrazit celé portfólio</a>
       </div>
@@ -292,34 +268,6 @@ const pickerData = {
   </div>
 
   <div class="section-shell section--cream" id="o-mne">
-    <Image
-      src={scissorsStrip}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="0.1"
-      width={190}
-      style="top: 60px; right: 2vw; width: min(190px, 14vw); transform: rotate(6deg);"
-    />
-    <Image
-      src={reelScissors}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="0.18"
-      width={160}
-      style="bottom: 100px; right: 3vw; width: min(160px, 12vw); transform: rotate(-10deg);"
-    />
-    <Image
-      src={scissorsCut}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="-0.1"
-      width={210}
-      style="bottom: -20px; left: 1.5vw; width: min(210px, 15vw); transform: rotate(8deg);"
-    />
-
     <section class="wrap page-section text-section about">
       <div
         class="about-portrait bleed-up"
@@ -332,7 +280,6 @@ const pickerData = {
       <div class="about-content">
         <div class="section-heading">
           <h2>O mně</h2>
-          <span class="section-number" aria-hidden="true">02</span>
         </div>
         <p>Nezačal jsem střihem. Začal jsem tím, že jsem chtěl něco ukázat.</p>
         <p>
@@ -354,7 +301,6 @@ const pickerData = {
     <section class="wrap page-section text-section">
       <div class="section-heading">
         <h2>Co o nás říkají zákazníci</h2>
-        <span class="section-number" aria-hidden="true">03</span>
       </div>
       <div class="testimonial-carousel">
         {testimonials.length > 1 && (
@@ -465,38 +411,9 @@ const pickerData = {
   </script>
 
   <div class="section-shell section--green" id="sluzby">
-    <Image
-      src={filmstripRoll}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="0.1"
-      width={220}
-      style="top: 0; right: 1.5vw; width: min(220px, 16vw); transform: rotate(4deg);"
-    />
-    <Image
-      src={scissorsCut}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="0.16"
-      width={170}
-      style="bottom: 80px; right: 2.5vw; width: min(170px, 13vw); transform: rotate(-12deg);"
-    />
-    <Image
-      src={scissorsStrip}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="-0.12"
-      width={160}
-      style="bottom: 40px; left: 2vw; width: min(160px, 12vw); transform: rotate(14deg);"
-    />
-
     <section class="wrap page-section text-section">
       <div class="section-heading">
         <h2>Služby</h2>
-        <span class="section-number" aria-hidden="true">04</span>
       </div>
 
       <div class="services-grid">
@@ -530,29 +447,9 @@ const pickerData = {
   </div>
 
   <div class="section-shell section--brown" id="kontakt">
-    <Image
-      src={reelScissors}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="0.1"
-      width={200}
-      style="top: -10px; right: 2vw; width: min(200px, 15vw); transform: rotate(-10deg);"
-    />
-    <Image
-      src={filmstripRoll}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="-0.1"
-      width={160}
-      style="top: 40px; left: 2.5vw; width: min(160px, 12vw); transform: rotate(10deg);"
-    />
-
     <section class="wrap page-section text-section">
       <div class="section-heading">
         <h2>Máte materiál a termín?</h2>
-        <span class="section-number" aria-hidden="true">05</span>
       </div>
       <p>
         Napište mi, o co jde a dokdy to potřebujete. Ozvu se do druhého dne s
