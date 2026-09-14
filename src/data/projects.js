@@ -48,6 +48,7 @@ export const projects = [
     format: "horizontal",
     youtubeId: "ybyOWrqEKHM",
     featured: true,
+    heroBackground: true,
     description:
       "Silový závod, kde je energie v každém záběru, takže největší výzva byla nevyčerpat diváka hned na začátku. Napětí jsem držel dole a nechal ho vystoupat až k závěrečnému pokusu, který nese celé video.",
   },

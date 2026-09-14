@@ -134,9 +134,54 @@ a:focus-visible, button:focus-visible {
   --section-muted: #E4D9C9;
 }
 
+/* ---------- Hero video na pozadí ---------- */
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-media__poster {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-media__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-media__frame iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100vw, 177.78vh);
+  height: max(100vh, 56.25vw);
+  transform: translate(-50%, -50%) scale(1.25);
+  border: 0;
+  pointer-events: none;
+}
+
+.hero-media__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--green) 74%, transparent) 0%,
+    color-mix(in srgb, var(--green) 90%, transparent) 100%
+  );
+}
+
 /* ---------- Hero a showreel ---------- */
 
 .hero {
+  position: relative;
+  z-index: 1;
   padding: var(--space-lg) 0 var(--space-xl);
 }
 

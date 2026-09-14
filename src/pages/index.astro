@@ -1,13 +1,18 @@
 ---
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
-import { featuredProjects } from "../data/projects";
+import { featuredProjects, horizontalProjects } from "../data/projects";
 import portrait from "../assets/vojta-portret.jpg";
 import scissorsStrip from "../assets/decor/scissors-strip.png";
 import reelScissors from "../assets/decor/reel-scissors.png";
 import filmstripRoll from "../assets/decor/filmstrip-roll.webp";
 import scissorsCut from "../assets/decor/scissors-cut.png";
 import referenceRaw from "../data/reference.txt?raw";
+
+// Video na pozadí hera: projekt označený `heroBackground: true` v
+// projects.js, jinak první horizontální projekt v poli.
+const heroProject = horizontalProjects.find((p) => p.heroBackground) ?? horizontalProjects[0];
+const heroPosterUrl = `https://img.youtube.com/vi/${heroProject.youtubeId}/maxresdefault.jpg`;
 
 type Testimonial = { name: string; role: string; quote: string };
 
@@ -123,42 +128,11 @@ const pickerData = {
 
 <Layout title="Úvod">
   <div class="section-shell section--green">
-    <Image
-      src={scissorsStrip}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="0.15"
-      width={220}
-      style="top: 40px; right: 1.5vw; width: min(220px, 16vw); transform: rotate(-6deg);"
-    />
-    <Image
-      src={reelScissors}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="0.2"
-      width={180}
-      style="bottom: 60px; right: 2.5vw; width: min(180px, 13vw); transform: rotate(12deg);"
-    />
-    <Image
-      src={filmstripRoll}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="-0.08"
-      width={160}
-      style="top: 120px; left: 2vw; width: min(160px, 12vw); transform: rotate(-10deg);"
-    />
-    <Image
-      src={scissorsCut}
-      alt=""
-      aria-hidden="true"
-      class="bg-decor"
-      data-parallax="-0.15"
-      width={190}
-      style="bottom: 20px; left: 1.5vw; width: min(190px, 14vw); transform: rotate(8deg);"
-    />
+    <div class="hero-media" aria-hidden="true">
+      <div class="hero-media__poster" style={`background-image: url(${heroPosterUrl});`}></div>
+      <div class="hero-media__frame" id="hero-video-frame" data-youtube-id={heroProject.youtubeId}></div>
+      <div class="hero-media__overlay"></div>
+    </div>
 
     <div class="wrap hero">
       <div class="hero-text">
@@ -176,6 +150,31 @@ const pickerData = {
       </div>
     </div>
   </div>
+
+  <script is:inline>
+    (() => {
+      const frame = document.getElementById("hero-video-frame");
+      if (!frame) return;
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // Při omezeném pohybu se iframe vůbec nevkládá — zůstane jen
+      // statický náhled s překryvem (viz .hero-media__poster).
+      if (prefersReducedMotion) return;
+
+      const youtubeId = frame.dataset.youtubeId;
+      if (!youtubeId) return;
+
+      const iframe = document.createElement("iframe");
+      iframe.src =
+        `https://www.youtube.com/embed/${youtubeId}` +
+        `?autoplay=1&mute=1&loop=1&playlist=${youtubeId}` +
+        `&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&iv_load_policy=3`;
+      iframe.title = "";
+      iframe.setAttribute("aria-hidden", "true");
+      iframe.setAttribute("tabindex", "-1");
+      iframe.setAttribute("allow", "autoplay; encrypted-media");
+      frame.appendChild(iframe);
+    })();
+  </script>
 
   <div class="section-shell section--cream" id="ukazky">
     <Image
