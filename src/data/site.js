@@ -2,5 +2,4 @@
 
 // Endpoint poptávkového formuláře (Formcarry). Není to tajný údaj —
 // v HTML je stejně veřejně vidět — ale takhle je jen na jednom místě.
-// TODO: doplnit skutečné ID formuláře z panelu Formcarry (Setup tab).
-export const FORMCARRY_ENDPOINT = "FORMCARRY_ENDPOINT_SEM";
+export const FORMCARRY_ENDPOINT = "https://formcarry.com/s/RJ1qL7T3AZ9";
