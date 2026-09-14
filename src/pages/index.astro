@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import Timeline from "../components/Timeline.astro";
 import SectionMarker from "../components/SectionMarker.astro";
 import ReferenceIllustration from "../components/ReferenceIllustration.astro";
+import ContactForm from "../components/ContactForm.astro";
 import { featuredProjects, horizontalProjects } from "../data/projects";
 import { references } from "../data/references";
 import portrait from "../assets/vojta-portret.jpg";
@@ -306,7 +307,7 @@ const pickerData = {
         Napište mi, o co jde a dokdy to potřebujete. Ozvu se do druhého dne s
         tím, jestli to stihnu a co to bude stát.
       </p>
-      <a class="btn" href="mailto:vojta.malohlava1@gmail.com">Napsat e-mail</a>
+      <ContactForm />
     </section>
   </div>
   </Timeline>

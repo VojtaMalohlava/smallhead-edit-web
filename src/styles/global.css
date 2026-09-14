@@ -731,6 +731,197 @@ a:focus-visible, button:focus-visible {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain-noise)'/%3E%3C/svg%3E");
 }
 
+/* ---------- Poptávkový formulář (ContactForm.astro) ---------- */
+
+.contact-form-wrap {
+  max-width: 680px;
+}
+
+.form-promise {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1.5rem 0 2rem;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--amber);
+}
+
+.form-promise__dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem 1.5rem;
+}
+
+.form-field--full {
+  grid-column: 1 / -1;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: color-mix(in srgb, var(--amber) 80%, transparent);
+  margin-bottom: 0.5rem;
+}
+
+.form-optional {
+  text-transform: none;
+  letter-spacing: normal;
+  opacity: 0.75;
+}
+
+.form-hint {
+  margin: -0.15rem 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--section-muted, #C9D6D1);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  font: inherit;
+  font-size: 1rem;
+  color: var(--cream);
+  background: var(--green-deep);
+  border: 1px solid var(--brown);
+  border-radius: 4px;
+  padding: 0.875rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: color-mix(in srgb, var(--cream) 45%, transparent);
+}
+
+.form-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFD28A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  background-size: 18px;
+  padding-right: 2.5rem;
+}
+
+.form-field select:invalid {
+  color: color-mix(in srgb, var(--cream) 65%, transparent);
+}
+
+.form-field input:focus-visible,
+.form-field select:focus-visible,
+.form-field textarea:focus-visible {
+  outline: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 30%, transparent);
+}
+
+.form-field input.has-error,
+.form-field select.has-error,
+.form-field textarea.has-error {
+  border-color: #E37B6B;
+}
+
+.form-field-error {
+  display: block;
+  min-height: 1.1em;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #E37B6B;
+}
+
+.form-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-submit-error {
+  margin: 1.5rem 0 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid color-mix(in srgb, #E37B6B 50%, transparent);
+  border-radius: 4px;
+  color: #E37B6B;
+  font-size: 0.9rem;
+}
+
+.form-submit {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border: 0;
+  cursor: pointer;
+  margin-top: 1.75rem;
+}
+
+.form-submit[aria-busy="true"] {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.form-privacy {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--section-muted, #C9D6D1);
+  max-width: none;
+}
+
+.form-success {
+  background: var(--green-deep);
+  border: 1px solid color-mix(in srgb, var(--amber) 35%, transparent);
+  border-left: 3px solid var(--amber);
+  border-radius: 4px;
+  padding: 1.5rem;
+}
+
+.form-success p {
+  margin: 0;
+  color: var(--cream);
+  max-width: none;
+}
+
+.form-fallback {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--section-muted, #C9D6D1);
+  max-width: none;
+}
+
+.fallback-email-link {
+  color: var(--section-accent, var(--amber));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Patička ---------- */
 
 .foot {

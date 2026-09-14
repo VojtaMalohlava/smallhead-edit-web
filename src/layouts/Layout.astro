@@ -61,13 +61,22 @@ const currentPath = Astro.url.pathname;
           IČO 21636206
         </div>
         <div class="foot-links">
-          <a href="mailto:vojta.malohlava1@gmail.com">vojta.malohlava1@gmail.com</a>
+          <a class="foot-email-link" href="#">e-mail</a>
         </div>
       </div>
     </footer>
 
     <script>
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Adresa jako base64, ne čistý text — ať ji nesebere robot, co
+      // hledá "@" v HTML. atob() se vyhodnocuje až za běhu.
+      document.querySelectorAll(".foot-email-link").forEach((link) => {
+        if (!(link instanceof HTMLAnchorElement)) return;
+        const email = atob("dm9qdGEubWFsb2hsYXZhMUBnbWFpbC5jb20=");
+        link.href = `mailto:${email}`;
+        link.textContent = email;
+      });
 
       document.addEventListener("click", (event) => {
         const target = event.target;

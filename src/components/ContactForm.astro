@@ -1,0 +1,250 @@
+---
+import { FORMCARRY_ENDPOINT } from "../data/site.js";
+
+// Unikátní přípona pro id/for atributy — kdyby se komponenta na
+// stránce použila dvakrát, popisky a chybové zprávy se nepopletou.
+const uid = Math.random().toString(36).slice(2, 9);
+const id = (name: string) => `cf-${name}-${uid}`;
+
+const typKlientaOptions = [
+  "Agentura nebo produkce",
+  "Firma nebo brand",
+  "OSVČ nebo malá firma",
+  "Něco jiného",
+];
+---
+
+<div class="contact-form-wrap">
+  <p class="form-promise">
+    <span class="form-promise__dot" aria-hidden="true"></span>
+    Odpovím do 24 hodin, v pracovní dny obvykle dřív.
+  </p>
+
+  <form class="contact-form" novalidate data-endpoint={FORMCARRY_ENDPOINT}>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for={id("jmeno")}>Jméno</label>
+        <input id={id("jmeno")} name="jmeno" type="text" autocomplete="name" required aria-describedby={id("jmeno-error")} />
+        <span class="form-field-error" id={id("jmeno-error")} role="alert"></span>
+      </div>
+
+      <div class="form-field">
+        <label for={id("email")}>E-mail</label>
+        <input id={id("email")} name="email" type="email" autocomplete="email" required aria-describedby={id("email-error")} />
+        <span class="form-field-error" id={id("email-error")} role="alert"></span>
+      </div>
+
+      <div class="form-field">
+        <label for={id("typ")}>Typ klienta</label>
+        <select id={id("typ")} name="typ" required aria-describedby={id("typ-error")}>
+          <option value="" disabled selected>Vyberte možnost</option>
+          {typKlientaOptions.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+        <span class="form-field-error" id={id("typ-error")} role="alert"></span>
+      </div>
+
+      <div class="form-field">
+        <label for={id("materialy")}>
+          Odkaz na materiál <span class="form-optional">(nepovinné)</span>
+        </label>
+        <input id={id("materialy")} name="materialy" type="url" autocomplete="off" placeholder="https://…" aria-describedby={id("materialy-error")} />
+        <span class="form-field-error" id={id("materialy-error")} role="alert"></span>
+      </div>
+
+      <div class="form-field form-field--full">
+        <label for={id("zadani")}>Co potřebujete a do kdy</label>
+        <p class="form-hint">
+          Napište, o jaké video jde, kolik máte materiálu a kdy to
+          potřebujete mít hotové.
+        </p>
+        <textarea id={id("zadani")} name="zadani" rows="5" required aria-describedby={id("zadani-error")}></textarea>
+        <span class="form-field-error" id={id("zadani-error")} role="alert"></span>
+      </div>
+
+      <div class="form-field form-field--full">
+        <label for={id("zdroj")}>
+          Kde jste na nás narazili? <span class="form-optional">(nepovinné)</span>
+        </label>
+        <input id={id("zdroj")} name="zdroj" type="text" autocomplete="off" aria-describedby={id("zdroj-error")} />
+        <span class="form-field-error" id={id("zdroj-error")} role="alert"></span>
+      </div>
+    </div>
+
+    <div class="form-honeypot" aria-hidden="true">
+      <label for={id("website")}>Nevyplňujte, prosím</label>
+      <input id={id("website")} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <p class="form-submit-error" role="alert" hidden>
+      Odeslání se nepovedlo. Zkuste to prosím znovu, nebo mi napište přímo na e-mail níž.
+    </p>
+
+    <button type="submit" class="btn form-submit">Odeslat poptávku</button>
+
+    <p class="form-privacy">
+      Odesláním souhlasíte se zpracováním uvedených údajů za účelem vyřízení
+      poptávky. Údaje nepředávám třetím stranám a neposílám na ně marketingová
+      sdělení.
+    </p>
+  </form>
+
+  <div class="form-success" role="status" aria-live="polite" hidden>
+    <p>
+      Poptávka dorazila. Ozvu se do 24 hodin, v pracovní dny obvykle dřív. V
+      odpovědi se doptám na detaily a řeknu vám, jestli mám na váš termín
+      kapacitu. Nic tím zatím neriskujete.
+    </p>
+  </div>
+
+  <p class="form-fallback">
+    Radši rovnou napíšete? Klidně na <a class="fallback-email-link" href="#">e-mail</a>.
+  </p>
+</div>
+
+<script>
+  (() => {
+    // Adresa je uložená jako base64, ne rozdělená na dvě půlky —
+    // spojení dvou textových konstant přes `${a}@${b}` by build
+    // (minifikace) klidně sloučil zpátky do jednoho čitelného řetězce.
+    // atob() se vyhodnocuje až za běhu v prohlížeči, takže se v
+    // vygenerovaném HTML/JS adresa nikde neobjeví vcelku.
+    const EMAIL = atob("dm9qdGEubWFsb2hsYXZhMUBnbWFpbC5jb20=");
+
+    // Odkaz "napsat rovnou na e-mail" se skládá až tady, ať adresa
+    // nikdy neleží v HTML jako čistý text pro roboty.
+    document.querySelectorAll(".fallback-email-link").forEach((link) => {
+      if (!(link instanceof HTMLAnchorElement)) return;
+      link.href = `mailto:${EMAIL}`;
+      link.textContent = EMAIL;
+    });
+
+    type FormField = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+    const TYPE_MISMATCH_MESSAGES: Record<string, string> = {
+      email: "Zadejte platnou e-mailovou adresu.",
+      url: "Zadejte platnou webovou adresu (včetně https://).",
+    };
+
+    function messageFor(field: FormField): string {
+      const validity = field.validity;
+      if (validity.valueMissing) {
+        return field.tagName === "SELECT"
+          ? "Vyberte prosím jednu možnost."
+          : "Toto pole je povinné.";
+      }
+      if (validity.typeMismatch) {
+        return TYPE_MISMATCH_MESSAGES[(field as HTMLInputElement).type] || "Zkontrolujte prosím formát pole.";
+      }
+      return "Zkontrolujte prosím tohle pole.";
+    }
+
+    function clearFieldError(field: FormField, errorEl: HTMLElement | null) {
+      field.removeAttribute("aria-invalid");
+      field.classList.remove("has-error");
+      if (errorEl) errorEl.textContent = "";
+    }
+
+    function setFieldError(field: FormField, errorEl: HTMLElement | null) {
+      field.setAttribute("aria-invalid", "true");
+      field.classList.add("has-error");
+      if (errorEl) errorEl.textContent = messageFor(field);
+    }
+
+    function errorElFor(field: FormField): HTMLElement | null {
+      const describedBy = field.getAttribute("aria-describedby");
+      return describedBy ? document.getElementById(describedBy) : null;
+    }
+
+    document.querySelectorAll(".contact-form").forEach((formEl) => {
+      if (!(formEl instanceof HTMLFormElement)) return;
+      const form = formEl;
+      // Kdyby byla komponenta na stránce dvakrát, nespustit stejný
+      // formulář dvakrát.
+      if (form.dataset.cfInitialized === "true") return;
+      form.dataset.cfInitialized = "true";
+
+      const endpoint = form.dataset.endpoint || "";
+      const submitBtn = form.querySelector(".form-submit");
+      const submitErrorEl = form.querySelector(".form-submit-error");
+      const honeypot = form.querySelector('input[name="website"]');
+      const successBlock = form.parentElement?.querySelector(".form-success") ?? null;
+
+      const fields = Array.from(form.querySelectorAll<FormField>("input, select, textarea")).filter(
+        (el) => el !== honeypot,
+      );
+
+      fields.forEach((field) => {
+        const errorEl = errorElFor(field);
+        field.addEventListener("input", () => clearFieldError(field, errorEl));
+        field.addEventListener("change", () => clearFieldError(field, errorEl));
+      });
+
+      function validateAll(): FormField | null {
+        let firstInvalid: FormField | null = null;
+        fields.forEach((field) => {
+          const errorEl = errorElFor(field);
+          if (field.checkValidity()) {
+            clearFieldError(field, errorEl);
+          } else {
+            setFieldError(field, errorEl);
+            if (!firstInvalid) firstInvalid = field;
+          }
+        });
+        return firstInvalid;
+      }
+
+      function showSuccess() {
+        form.hidden = true;
+        if (successBlock instanceof HTMLElement) successBlock.hidden = false;
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        // Honeypot: pokud je vyplněný, tvař se, že se to povedlo, ale
+        // nic ve skutečnosti neposílej.
+        if (honeypot instanceof HTMLInputElement && honeypot.value.trim() !== "") {
+          showSuccess();
+          return;
+        }
+
+        const firstInvalid = validateAll();
+        if (firstInvalid) {
+          firstInvalid.focus();
+          return;
+        }
+
+        if (submitErrorEl instanceof HTMLElement) submitErrorEl.hidden = true;
+        if (submitBtn instanceof HTMLButtonElement) {
+          submitBtn.disabled = true;
+          submitBtn.setAttribute("aria-busy", "true");
+          submitBtn.textContent = "Odesílám…";
+        }
+
+        const formData = new FormData(form);
+
+        fetch(endpoint, {
+          method: "POST",
+          body: formData,
+          headers: { Accept: "application/json" },
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("request failed");
+            showSuccess();
+          })
+          .catch(() => {
+            if (submitErrorEl instanceof HTMLElement) submitErrorEl.hidden = false;
+          })
+          .finally(() => {
+            if (submitBtn instanceof HTMLButtonElement) {
+              submitBtn.disabled = false;
+              submitBtn.removeAttribute("aria-busy");
+              submitBtn.textContent = "Odeslat poptávku";
+            }
+          });
+      });
+    });
+  })();
+</script>
