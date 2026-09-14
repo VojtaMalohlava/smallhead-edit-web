@@ -8,10 +8,12 @@ import { featuredProjects, horizontalProjects } from "../data/projects";
 import { references } from "../data/references";
 import portrait from "../assets/vojta-portret.jpg";
 
-// Video na pozadí hera: projekt označený `heroBackground: true` v
-// projects.js, jinak první horizontální projekt v poli.
+// Video na pozadí hera: náhodně vybrané z horizontálních projektů,
+// pokaždé jiné při načtení stránky (viz skript pod hero sekcí). Tohle
+// je jen fallback pro poster, než/pokud se JS nespustí.
 const heroProject = horizontalProjects.find((p) => p.heroBackground) ?? horizontalProjects[0];
 const heroPosterUrl = `https://img.youtube.com/vi/${heroProject.youtubeId}/maxresdefault.jpg`;
+const heroPickerData = horizontalProjects.map((p) => p.youtubeId);
 
 const pickerFields = ({ title, client, category, format, youtubeId, description }: (typeof featuredProjects)[number]) => ({
   title,
@@ -36,6 +38,8 @@ const pickerData = {
       <div class="hero-media__overlay"></div>
     </div>
 
+    <script type="application/json" id="hero-video-data" is:inline set:html={JSON.stringify(heroPickerData)} />
+
     <div class="wrap hero">
       <SectionMarker time="00:00" label="Úvod" />
       <div class="hero-text">
@@ -58,13 +62,32 @@ const pickerData = {
     (() => {
       const frame = document.getElementById("hero-video-frame");
       if (!frame) return;
+
+      // Náhodný výběr videa na pozadí hera při každém načtení stránky —
+      // z celého seznamu horizontálních projektů, ne vždycky to stejné.
+      const dataEl = document.getElementById("hero-video-data");
+      let youtubeId = frame.dataset.youtubeId;
+      if (dataEl) {
+        try {
+          const ids = JSON.parse(dataEl.textContent || "[]");
+          if (Array.isArray(ids) && ids.length) {
+            youtubeId = ids[Math.floor(Math.random() * ids.length)];
+          }
+        } catch (e) {}
+      }
+      if (!youtubeId) return;
+
+      // Poster se aktualizuje vždy, i při omezeném pohybu — je to jediné,
+      // co uživatel s prefers-reduced-motion nakonec uvidí.
+      const poster = document.querySelector(".hero-media__poster");
+      if (poster) {
+        poster.style.backgroundImage = `url(https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg)`;
+      }
+
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       // Při omezeném pohybu se iframe vůbec nevkládá — zůstane jen
       // statický náhled s překryvem (viz .hero-media__poster).
       if (prefersReducedMotion) return;
-
-      const youtubeId = frame.dataset.youtubeId;
-      if (!youtubeId) return;
 
       const iframe = document.createElement("iframe");
       iframe.src =
