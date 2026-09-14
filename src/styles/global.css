@@ -1,6 +1,9 @@
 :root {
   --green: #10443E;
   --green-deep: #0B322D;
+  /* ~7 % tmavší zelená, aby sekce mohly střídat odstín beze změny
+     barevné rodiny (hnědá se dál jako pozadí sekcí nepoužívá). */
+  --green-alt: #0F3F3A;
   --amber: #FFD28A;
   --brown: #615035;
   --cream: #F7F3EC;
@@ -123,6 +126,13 @@ a:focus-visible, button:focus-visible {
   --section-muted: #C9D6D1;
 }
 
+.section--green-alt {
+  background: var(--green-alt);
+  color: var(--cream);
+  --section-accent: var(--amber);
+  --section-muted: #C9D6D1;
+}
+
 .section--cream {
   background: var(--cream);
   color: var(--green);
@@ -130,12 +140,9 @@ a:focus-visible, button:focus-visible {
   --section-muted: #3D5A55;
 }
 
-.section--brown {
-  background: var(--brown);
-  color: var(--cream);
-  --section-accent: var(--amber);
-  --section-muted: #E4D9C9;
-}
+/* Hnědá (--brown) se jako pozadí celé sekce už nepoužívá — zůstává na
+   tenkých dělicích linkách mezi sekcemi (viz .section-shell) a jako
+   --section-accent na krémovém pozadí výše. */
 
 /* ---------- Hero video na pozadí ---------- */
 
@@ -903,6 +910,7 @@ a:focus-visible, button:focus-visible {
      prvků zůstal uvnitř téhle sekce a nezmizel pod pozadím úplně jiné
      části stránky. */
   isolation: isolate;
+  border-top: 1px solid color-mix(in srgb, var(--brown) 70%, transparent);
 }
 
 .section-heading {
