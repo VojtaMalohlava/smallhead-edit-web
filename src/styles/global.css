@@ -113,7 +113,12 @@ a:focus-visible, button:focus-visible {
 /* ---------- Obsah stránky ---------- */
 
 .page-section {
-  padding: var(--space-xl) 0;
+  /* Jen top/bottom (longhand) — zápis přes zkrácené "padding: X 0"
+     by na prvcích s kombinací .wrap.page-section (stejná specificita,
+     ale dřívější v pořadí u .wrap) vynuloval i padding-left/right
+     zděděný z .wrap a obsah by seděl u okraje obrazovky. */
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
 }
 
 /* ---------- Barevné varianty sekcí ----------
@@ -753,9 +758,15 @@ a:focus-visible, button:focus-visible {
   inset: 0;
   z-index: 5;
   pointer-events: none;
+  /* Linka sedí v okrajovém prostoru (gutter) VLEVO od skutečného
+     obsahu, ne přímo na jeho hraně — ať nezasahuje do fotek, karet
+     ani jiných prvků, které mají levý okraj na stejném místě jako
+     .wrap. Odsazení od obsahu je pevných 1.75rem. */
+  padding-left: max(0.5rem, calc(var(--pad) - 1.75rem));
 }
 
 .timeline-rail {
+  position: relative;
   width: 2px;
   height: 100%;
   background-image: repeating-linear-gradient(
@@ -776,7 +787,7 @@ a:focus-visible, button:focus-visible {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   border-left: 7px solid var(--amber);
-  transform: translate(-2px, -5px);
+  transform: translate(-2.5px, -5px);
   transition: top 0.15s linear;
 }
 
