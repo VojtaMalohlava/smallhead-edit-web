@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import Timeline from "../components/Timeline.astro";
 import SectionMarker from "../components/SectionMarker.astro";
+import ReferenceIllustration from "../components/ReferenceIllustration.astro";
 import { featuredProjects, horizontalProjects } from "../data/projects";
 import { references } from "../data/references";
 import portrait from "../assets/vojta-portret.jpg";
@@ -217,13 +218,8 @@ const pickerData = {
       <div class="references-grid">
         {references.map((item) => (
           <article class="reference-card">
-            <div class="reference-illustration" aria-hidden="true">
-              <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
-                <g fill="currentColor">
-                  <circle cx="32" cy="23" r="10" />
-                  <path d="M14 54c0-12.7 8.1-20 18-20s18 7.3 18 20z" />
-                </g>
-              </svg>
+            <div class="reference-illustration">
+              <ReferenceIllustration type={item.type} />
             </div>
             <blockquote>
               <p>„{item.quote}“</p>

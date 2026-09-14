@@ -1,0 +1,63 @@
+---
+// Minimalistická SVG ilustrace pro kartu reference — motiv podle typu
+// klienta (pole `type` v src/data/references.js) v pozadí za siluetou
+// postavy. Žádné obrázkové soubory, čistě inline vektor.
+interface Props {
+  type: string;
+}
+
+const { type } = Astro.props;
+
+function stripDiacritics(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
+}
+
+const MOTIFS: { match: RegExp; icon: string }[] = [
+  {
+    // Realitní makléř -> obrys domu
+    match: /realit|makler/,
+    icon: `<path d="M10 30 L32 14 L54 30" /><path d="M16 26 V52 H48 V26" />`,
+  },
+  {
+    // Marketingová agentura -> stoupající sloupcový graf
+    match: /agentur/,
+    icon: `<path d="M12 52 H52" /><rect x="18" y="36" width="7" height="16" /><rect x="30" y="26" width="7" height="26" /><rect x="42" y="16" width="7" height="36" />`,
+  },
+  {
+    // Marketingový specialista -> stoupající křivka s bodem
+    match: /specialist/,
+    icon: `<path d="M10 46 C22 46, 26 24, 38 24 S50 14, 54 14" /><circle cx="54" cy="14" r="2.6" fill="currentColor" stroke="none" />`,
+  },
+  {
+    // Filmová/video produkce -> filmová klapka
+    match: /film|video|produkc/,
+    icon: `<path d="M12 26 L52 26 L52 50 L12 50 Z" /><path d="M12 26 L18 16 L48 16 L52 26 Z" /><path d="M20 16 L24 26 M30 16 L34 26 M40 16 L44 26" />`,
+  },
+];
+
+// Neznámý typ klienta -> neutrální geometrický tvar.
+const DEFAULT_MOTIF = `<path d="M32 12 L50 23 L50 45 L32 56 L14 45 L14 23 Z" />`;
+
+const normalized = stripDiacritics(type);
+const match = MOTIFS.find((entry) => entry.match.test(normalized));
+const motif = match ? match.icon : DEFAULT_MOTIF;
+---
+
+<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+  <g
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.25"
+    set:html={motif}
+  />
+  <g fill="currentColor">
+    <circle cx="32" cy="24" r="9" />
+    <path d="M16 52c0-11.6 7.2-18 16-18s16 6.4 16 18z" />
+  </g>
+</svg>
