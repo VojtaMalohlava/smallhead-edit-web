@@ -404,16 +404,49 @@ a:focus-visible, button:focus-visible {
 }
 
 .service {
+  position: relative;
   background: var(--green-deep);
   color: var(--cream);
-  border: 1px solid rgba(255, 210, 138, 0.15);
   border-radius: 6px;
   padding: clamp(1.5rem, 4vw, 2.5rem);
+  overflow: hidden;
+  transition: transform 250ms ease;
+}
+
+.service::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 56px;
+  height: 3px;
+  background: var(--amber);
+  transition: width 250ms ease;
+}
+
+.service:hover,
+.service:focus-within {
+  transform: translateY(-4px);
+}
+
+.service:hover::before,
+.service:focus-within::before {
+  width: 100%;
+}
+
+.service-number {
+  display: block;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: clamp(2.75rem, 5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
 }
 
 .service h3 {
   font-size: var(--step-2);
-  color: var(--amber);
+  color: var(--cream);
   margin-bottom: 1rem;
 }
 
@@ -714,6 +747,14 @@ a:focus-visible, button:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .timeline-playhead {
+    transition: none;
+  }
+
+  .service {
+    transition: none;
+  }
+
+  .service::before {
     transition: none;
   }
 }
