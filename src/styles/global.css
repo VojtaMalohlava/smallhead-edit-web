@@ -20,6 +20,9 @@
   --space-md: clamp(2.5rem, 6vw, 4rem);
   --space-lg: clamp(3.75rem, 9vw, 5.25rem);
   --space-xl: clamp(5.25rem, 13.5vw, 9.75rem);
+
+  /* Jediné místo, kde se mění krytí filmového zrna (viz .grain níže). */
+  --grain-opacity: 0.16;
 }
 
 *, *::before, *::after {
@@ -706,6 +709,19 @@ a:focus-visible, button:focus-visible {
 .btn--secondary:hover {
   background: color-mix(in srgb, var(--section-accent, var(--amber)) 10%, transparent);
   border-color: var(--section-accent, var(--amber));
+}
+
+/* ---------- Filmové zrno přes celou stránku ---------- */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+  background-repeat: repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain-noise)'/%3E%3C/svg%3E");
 }
 
 /* ---------- Patička ---------- */
