@@ -615,13 +615,37 @@ a:focus-visible, button:focus-visible {
   align-items: start;
 }
 
+.about-portrait {
+  position: relative;
+}
+
+.about-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--green) 15%, transparent);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
 .about-portrait img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 4px;
+}
+
+/* Textový blok opticky přesahuje přes okraj fotky — z placeholderu se
+   stane komponovaný blok, ne dva oddělené sloupce. */
+@media (min-width: 821px) {
+  .about-content {
+    position: relative;
+    z-index: 1;
+    margin-left: clamp(-4rem, -6vw, -2rem);
+  }
 }
 
 @media (max-width: 820px) {
