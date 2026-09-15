@@ -50,17 +50,20 @@ výchozí inspirace pro barvy — rozvržení i typografie se od něj už liší
 ## Struktura webu (aktuální rozhodnutí)
 
 - **/** — jedna scrollovací landing page se sekcemi: hero, "Ukázky práce"
-  (4 náhodně vybraná videa), Klienti, O mně, Reference, Služby, Kontakt.
+  (3 náhodně vybraná videa), Klienti, Služby, Reference, Kontakt, O mně.
   Menu na tyto sekce odkazuje kotvami (`/#o-mne`, `/#sluzby`, `/#kontakt`)
   a zároveň se k nim dá doscrollovat.
 - **/portfolio** — samostatná stránka se všemi projekty (Horizontální
   formáty + Reels a vertikální formáty), viz `src/data/projects.js`.
-- Sekce "Ukázky práce" na úvodní stránce zobrazuje 1 horizontální a 3
-  vertikální projekty, vybrané NÁHODNĚ při každém načtení stránky (v
-  prohlížeči, z dat vložených do stránky při buildu). Personalizace podle
-  cookies/zájmů uživatele byla zvážena a zamítnuta — web nemá backend ani
-  sledování chování, takže by nebylo z čeho odvodit zájem uživatele, a
-  cookies pro tento účel by navíc vyžadovaly cookie lištu (GDPR).
+- Sekce "Ukázky práce" na úvodní stránce vykreslí do HTML karty všech
+  featured projektů obou formátů (kvůli SEO), CSS ve výchozím stavu
+  ukáže jen 1 horizontální a 2 vertikální a inline skript hned za
+  mřížkou (běží synchronně, ne přes JSON+innerHTML) mezi nimi NÁHODNĚ
+  přepne při každém načtení stránky, ještě před prvním vykreslením.
+  Personalizace podle cookies/zájmů uživatele byla zvážena a zamítnuta —
+  web nemá backend ani sledování chování, takže by nebylo z čeho odvodit
+  zájem uživatele, a cookies pro tento účel by navíc vyžadovaly cookie
+  lištu (GDPR).
 - O mně a Služby mají hotový reálný text od klienta.
 - Kontakt má poptávkový formulář (`src/components/ContactForm.astro`),
   odesílá se přes Formcarry (endpoint a doména webu jsou v

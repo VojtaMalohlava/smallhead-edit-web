@@ -318,16 +318,31 @@ a:focus-visible, button:focus-visible {
   gap: 1.5rem;
 }
 
-.showcase-trio {
+.showcase-pair {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
 
 @media (max-width: 900px) {
-  .showcase-trio {
+  .showcase-pair {
     grid-template-columns: 1fr;
   }
+}
+
+/* Kandidátské karty pro "Ukázky práce" jsou všechny v HTML (kvůli
+   SEO), ale bez JS (nebo než skript pod mřížkou proběhne) se má
+   zobrazit jen požadovaná sestava: 1 horizontální + 2 vertikální.
+   Skript nad skryté karty jen přepne inline "display", takže tohle
+   pravidlo platí i jako plnohodnotný no-JS fallback. */
+#ukazky-lead .video-card,
+#ukazky-vertical .video-card {
+  display: none;
+}
+
+#ukazky-lead .video-card:first-child,
+#ukazky-vertical .video-card:nth-child(-n + 2) {
+  display: block;
 }
 
 .section-cta {

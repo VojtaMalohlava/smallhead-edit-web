@@ -5,6 +5,7 @@ import Timeline from "../components/Timeline.astro";
 import SectionMarker from "../components/SectionMarker.astro";
 import ReferenceIllustration from "../components/ReferenceIllustration.astro";
 import ContactForm from "../components/ContactForm.astro";
+import VideoCard from "../components/VideoCard.astro";
 import { featuredProjects, horizontalProjects } from "../data/projects";
 import { references } from "../data/references";
 import portrait from "../assets/vojta-portret.jpg";
@@ -16,19 +17,13 @@ const heroProject = horizontalProjects.find((p) => p.heroBackground) ?? horizont
 const heroPosterUrl = `https://img.youtube.com/vi/${heroProject.youtubeId}/maxresdefault.jpg`;
 const heroPickerData = horizontalProjects.map((p) => p.youtubeId);
 
-const pickerFields = ({ title, client, category, format, youtubeId, description }: (typeof featuredProjects)[number]) => ({
-  title,
-  client,
-  category,
-  format,
-  youtubeId,
-  description,
-});
-
-const pickerData = {
-  horizontal: featuredProjects.filter((p) => p.format === "horizontal").map(pickerFields),
-  vertical: featuredProjects.filter((p) => p.format === "vertical").map(pickerFields),
-};
+// Kandidáti pro "Ukázky práce": VŠECHNY featured projekty daného formátu
+// se vykreslí rovnou do HTML (ať je vyhledávače vidí), CSS ve výchozím
+// stavu zobrazí jen první 3 (1 horizontální + 2 vertikální) a inline
+// skript pod mřížkou (viz níže) mezi nimi náhodně přepne, které se
+// reálně ukážou.
+const ukazkyHorizontal = featuredProjects.filter((p) => p.format === "horizontal");
+const ukazkyVertical = featuredProjects.filter((p) => p.format === "vertical");
 ---
 
 <Layout
@@ -120,9 +115,13 @@ const pickerData = {
         data-parallax="0.1"
         data-parallax-max="40"
         style="transform: translateY(-3rem);"
-      ></div>
+      >
+        {ukazkyHorizontal.map((project) => <VideoCard project={project} />)}
+      </div>
 
-      <div class="video-group showcase-trio" id="ukazky-vertical"></div>
+      <div class="video-group showcase-pair" id="ukazky-vertical">
+        {ukazkyVertical.map((project) => <VideoCard project={project} />)}
+      </div>
 
       <div class="section-cta">
         <a class="btn btn--secondary" href="/portfolio">Prohlédnout celé portfolio</a>
@@ -130,63 +129,40 @@ const pickerData = {
     </section>
   </div>
 
-  <script type="application/json" id="ukazky-data" is:inline set:html={JSON.stringify(pickerData)} />
   <script is:inline>
-    function pickRandom(list, count) {
-      const pool = [...list];
-      const picked = [];
-      while (picked.length < count && pool.length > 0) {
-        const index = Math.floor(Math.random() * pool.length);
-        picked.push(pool.splice(index, 1)[0]);
+    // Všechny kandidátské karty jsou už v HTML (viz VideoCard výše), CSS
+    // ve výchozím stavu ukazuje jen první 3 (1 horizontální + 2
+    // vertikální). Tenhle skript běží synchronně hned za mřížkou, ještě
+    // před prvním vykreslením — přepne viditelnost na náhodný výběr, aniž
+    // by došlo k probliknutí nebo posunu rozvržení.
+    (function () {
+      function pickIndices(total, count) {
+        const pool = [];
+        for (let i = 0; i < total; i++) pool.push(i);
+        const picked = [];
+        while (picked.length < count && pool.length > 0) {
+          const index = Math.floor(Math.random() * pool.length);
+          picked.push(pool.splice(index, 1)[0]);
+        }
+        return picked;
       }
-      return picked;
-    }
 
-    function thumbUrl(project) {
-      const quality = project.format === "horizontal" ? "maxresdefault" : "hqdefault";
-      return `https://img.youtube.com/vi/${project.youtubeId}/${quality}.jpg`;
-    }
+      function showOnly(cards, indices) {
+        // Explicitní "block"/"none" přes inline styl, ne prázdný řetězec
+        // — kdyby se jen odstranil inline styl, spadlo by to zpátky na
+        // CSS výchozí pravidlo (které ukazuje vždy jen první kartu) a
+        // u jiného než prvního indexu by se karta nezobrazila vůbec.
+        cards.forEach((card, i) => {
+          card.style.display = indices.includes(i) ? "block" : "none";
+        });
+      }
 
-    function cardHtml(project) {
-      const clientMarkup = project.client ? `<p class="client">${project.client}</p>` : "";
-      return `
-        <article class="video-card" data-format="${project.format}">
-          <button
-            class="video-card__thumb"
-            type="button"
-            data-yt-id="${project.youtubeId}"
-            data-yt-title="${project.title}"
-            aria-label="Přehrát ukázku: ${project.title}"
-          >
-            <img src="${thumbUrl(project)}" alt="" loading="lazy" />
-            <span class="video-card__play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-            </span>
-          </button>
-          <div class="video-card__meta">
-            <span class="tag">${project.category}</span>
-            <h3>${project.title}</h3>
-            ${clientMarkup}
-            <p class="desc">${project.description}</p>
-          </div>
-        </article>
-      `;
-    }
+      const leadCards = document.querySelectorAll("#ukazky-lead .video-card");
+      const vertCards = document.querySelectorAll("#ukazky-vertical .video-card");
 
-    const dataEl = document.getElementById("ukazky-data");
-    const data = dataEl ? JSON.parse(dataEl.textContent || "{}") : { horizontal: [], vertical: [] };
-
-    const leadContainer = document.getElementById("ukazky-lead");
-    const verticalContainer = document.getElementById("ukazky-vertical");
-
-    if (leadContainer) {
-      leadContainer.innerHTML = pickRandom(data.horizontal || [], 1).map(cardHtml).join("");
-    }
-    if (verticalContainer) {
-      verticalContainer.innerHTML = pickRandom(data.vertical || [], 3).map(cardHtml).join("");
-    }
+      if (leadCards.length) showOnly(leadCards, pickIndices(leadCards.length, 1));
+      if (vertCards.length) showOnly(vertCards, pickIndices(vertCards.length, Math.min(2, vertCards.length)));
+    })();
   </script>
 
   <div class="section-shell section--green-alt" id="klienti">
