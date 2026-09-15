@@ -23,7 +23,9 @@ Consult these guides before working on related tasks:
 
 ## Zadání projektu
 
-- Studio: Smallhead Edit, Vojtěch Malohlava, Brno. Střihová postprodukce.
+- Studio: Smallhead Edit, Vojtěch Malohlava. Střihová postprodukce.
+  Spolupráce probíhá na dálku pro klienty v celém Česku a na Slovensku,
+  lokalita studia není součástí pozicování webu.
   Tým: Vojtěch jako hlavní střihač a majitel, plus jeden střihač.
 - Cíl webu: získávat poptávky.
 - Barvy: #10443E zelená (pozadí, bloky), #FFD28A medová (akcenty),

@@ -4,6 +4,7 @@
 // v HTML je stejně veřejně vidět — ale takhle je jen na jednom místě.
 export const FORMCARRY_ENDPOINT = "https://formcarry.com/s/RJ1qL7T3AZ9";
 
-// Plánovaná doména webu, používá se pro Open Graph (og:url) a sitemap.xml.
-// Bez koncového lomítka.
-export const SITE_URL = "https://www.shedit.cz";
+// Aktuální živá adresa webu, používá se pro Open Graph (og:url),
+// canonical odkazy, sitemap.xml a robots.txt. Bez koncového lomítka.
+// Až bude koupená a nastavená vlastní doména, přepiš jen tady.
+export const SITE_URL = "https://smallhead-edit-web.pages.dev";
