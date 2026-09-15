@@ -1147,7 +1147,20 @@ a:focus-visible, button:focus-visible {
      prvků zůstal uvnitř téhle sekce a nezmizel pod pozadím úplně jiné
      části stránky. */
   isolation: isolate;
+  /* Explicitní z-index nad vrstvou hero videa (viz .hero-media, z-index: 0)
+     — bez toho spoléhalo pořadí vykreslení jen na isolation a pořadí
+     v DOM, což je křehké a v reálném prohlížeči (autoplay iframe, scroll
+     paralaxa) se to projevovalo jako obsah prosvítající skrz video. */
+  z-index: 1;
   border-top: 1px solid color-mix(in srgb, var(--brown) 70%, transparent);
+}
+
+.hero-shell {
+  /* Hero má vlastní zvětšený (scale 1.25) iframe na pozadí — bez
+     overflow: hidden přímo na sekci by se při určitých poměrech
+     stran mohl vizuálně protáhnout za spodní okraj sekce a
+     překrývat začátek další sekce. */
+  overflow: hidden;
 }
 
 .section-heading {
