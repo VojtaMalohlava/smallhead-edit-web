@@ -147,6 +147,45 @@ a:focus-visible, button:focus-visible {
   --section-muted: #3D5A55;
 }
 
+/* Měkký přechod na horním a dolním okraji krémové sekce, ať barevný
+   skok ze zelené na krémovou (a zpět) nepůsobí jako ostrý pruh.
+   Několik zastávek gradientu místo dvou, ať přelití vypadá plynule,
+   ne jako viditelná hrana uprostřed. Celé uvnitř vlastního paddingu
+   sekce, takže nezasahuje do nadpisu ani karet pod ním. */
+.section--cream::before,
+.section--cream::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(80px, 10vw, 120px);
+  pointer-events: none;
+}
+
+.section--cream::before {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--green) 0%,
+    color-mix(in srgb, var(--green) 65%, var(--cream)) 30%,
+    color-mix(in srgb, var(--green) 25%, var(--cream)) 55%,
+    color-mix(in srgb, var(--cream) 90%, var(--green)) 80%,
+    var(--cream) 100%
+  );
+}
+
+.section--cream::after {
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--cream) 0%,
+    color-mix(in srgb, var(--cream) 90%, var(--green-alt)) 20%,
+    color-mix(in srgb, var(--green-alt) 25%, var(--cream)) 45%,
+    color-mix(in srgb, var(--green-alt) 65%, var(--cream)) 70%,
+    var(--green-alt) 100%
+  );
+}
+
 /* Hnědá (--brown) se jako pozadí celé sekce už nepoužívá — zůstává na
    tenkých dělicích linkách mezi sekcemi (viz .section-shell) a jako
    --section-accent na krémovém pozadí výše. */
