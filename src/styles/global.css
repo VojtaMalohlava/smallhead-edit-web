@@ -147,36 +147,8 @@ a:focus-visible, button:focus-visible {
   --section-muted: #3D5A55;
 }
 
-/* Měkký přechod na horním a dolním okraji krémové sekce, ať barevný
-   skok ze zelené na krémovou (a zpět) nepůsobí jako ostrý pruh. Čistě
-   dvoubarevný gradient (žádné mezilehlé zastávky) — s víc zastávkami
-   nerovnoměrně rozprostřenými se dělá viditelný "schod" uprostřed
-   (Machův pruh), přesně to, co mělo zmizet. Výška = --space-xl, tedy
-   přesně stejná jako padding sekce, takže gradient vyplní celý okraj
-   a nikdy nezasáhne do nadpisu ani karet pod ním. */
-.section--cream::before,
-.section--cream::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: var(--space-xl);
-  pointer-events: none;
-}
-
-.section--cream::before {
-  top: 0;
-  background: linear-gradient(to bottom, var(--green), var(--cream));
-}
-
-.section--cream::after {
-  bottom: 0;
-  background: linear-gradient(to bottom, var(--cream), var(--green-alt));
-}
-
-/* Hnědá (--brown) se jako pozadí celé sekce už nepoužívá — zůstává na
-   tenkých dělicích linkách mezi sekcemi (viz .section-shell) a jako
-   --section-accent na krémovém pozadí výše. */
+/* Hnědá (--brown) se jako pozadí celé sekce už nepoužívá — zůstává jen
+   jako --section-accent na krémovém pozadí výše. */
 
 /* ---------- Hero video na pozadí ---------- */
 
@@ -1234,6 +1206,67 @@ a:focus-visible, button:focus-visible {
      stran mohl vizuálně protáhnout za spodní okraj sekce a
      překrývat začátek další sekce. */
   overflow: hidden;
+}
+
+/* ---------- Měkký přechod mezi VŠEMI sekcemi ----------
+   Každá sekce si nahoře "vybledne" ze skutečné barvy PŘEDCHOZÍ sekce
+   do vlastní (transparentní konec = pod ní prosvítá její vlastní
+   pozadí, viz .section--*). Stačí to řešit jen na horní hraně — dolní
+   hranu už řeší horní hrana sekce, co následuje. Čistě dvoubarevný
+   gradient (žádné mezilehlé zastávky), ať nevznikají viditelné
+   "schody" (Machův pruh). Výška odpovídá paddingu dané sekce, takže
+   nikdy nezasáhne do nadpisu ani obsahu pod ním. */
+.section-shell {
+  --edge-height: var(--space-xl);
+}
+
+.section-shell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--edge-height);
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--edge-in, transparent), transparent);
+}
+
+#ukazky {
+  --edge-in: var(--green);
+}
+
+#klienti {
+  --edge-height: var(--space-lg);
+  --edge-in: var(--cream);
+}
+
+#sluzby {
+  --edge-in: var(--green-alt);
+}
+
+#reference {
+  --edge-in: var(--green);
+}
+
+#kontakt {
+  --edge-in: var(--green-alt);
+}
+
+#o-mne {
+  --edge-in: var(--green);
+}
+
+/* Poslední sekce nemá po sobě žádnou další, která by přechod do
+   patičky (--green-deep) vyřešila za ni — dolní hranu si řeší sama. */
+#o-mne::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--space-xl);
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--green-deep));
 }
 
 .section-heading {
