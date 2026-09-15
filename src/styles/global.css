@@ -148,42 +148,30 @@ a:focus-visible, button:focus-visible {
 }
 
 /* Měkký přechod na horním a dolním okraji krémové sekce, ať barevný
-   skok ze zelené na krémovou (a zpět) nepůsobí jako ostrý pruh.
-   Několik zastávek gradientu místo dvou, ať přelití vypadá plynule,
-   ne jako viditelná hrana uprostřed. Celé uvnitř vlastního paddingu
-   sekce, takže nezasahuje do nadpisu ani karet pod ním. */
+   skok ze zelené na krémovou (a zpět) nepůsobí jako ostrý pruh. Čistě
+   dvoubarevný gradient (žádné mezilehlé zastávky) — s víc zastávkami
+   nerovnoměrně rozprostřenými se dělá viditelný "schod" uprostřed
+   (Machův pruh), přesně to, co mělo zmizet. Výška = --space-xl, tedy
+   přesně stejná jako padding sekce, takže gradient vyplní celý okraj
+   a nikdy nezasáhne do nadpisu ani karet pod ním. */
 .section--cream::before,
 .section--cream::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  height: clamp(80px, 10vw, 120px);
+  height: var(--space-xl);
   pointer-events: none;
 }
 
 .section--cream::before {
   top: 0;
-  background: linear-gradient(
-    to bottom,
-    var(--green) 0%,
-    color-mix(in srgb, var(--green) 65%, var(--cream)) 30%,
-    color-mix(in srgb, var(--green) 25%, var(--cream)) 55%,
-    color-mix(in srgb, var(--cream) 90%, var(--green)) 80%,
-    var(--cream) 100%
-  );
+  background: linear-gradient(to bottom, var(--green), var(--cream));
 }
 
 .section--cream::after {
   bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    var(--cream) 0%,
-    color-mix(in srgb, var(--cream) 90%, var(--green-alt)) 20%,
-    color-mix(in srgb, var(--green-alt) 25%, var(--cream)) 45%,
-    color-mix(in srgb, var(--green-alt) 65%, var(--cream)) 70%,
-    var(--green-alt) 100%
-  );
+  background: linear-gradient(to bottom, var(--cream), var(--green-alt));
 }
 
 /* Hnědá (--brown) se jako pozadí celé sekce už nepoužívá — zůstává na
@@ -350,6 +338,24 @@ a:focus-visible, button:focus-visible {
   justify-content: center;
   margin-top: clamp(2.5rem, 6vw, 4rem);
   margin-bottom: clamp(0.5rem, 2vw, 1rem);
+}
+
+/* Tady je to tlačítko jediná výzva k akci v sekci (na rozdíl od hera,
+   kde sekundární tlačítko stojí vedle primárního) — obyčejný tenký
+   obrys na krémovém pozadí byl skoro neviditelný, proto silnější
+   obrys a jemná výplň barvou akcentu, ne jen na hover. */
+.section-cta .btn--secondary {
+  border-width: 2px;
+  border-color: var(--section-accent, var(--amber));
+  background: color-mix(in srgb, var(--section-accent, var(--amber)) 12%, transparent);
+  font-weight: 700;
+}
+
+.section-cta .btn--secondary:hover,
+.section-cta .btn--secondary:focus-visible {
+  background: color-mix(in srgb, var(--section-accent, var(--amber)) 22%, transparent);
+  border-width: 2px;
+  padding: 1rem 2rem;
 }
 
 @media (max-width: 600px) {
@@ -1234,6 +1240,11 @@ a:focus-visible, button:focus-visible {
 .section-heading {
   position: relative;
   display: inline-block;
+  /* Sekce "Ukázky práce" nemá .text-section (ta si mezeru pod h2 řeší
+     sama), takže by bez týhle mezery seděl nadpis rovnou na první
+     kartě — a ta se navíc kvůli .bleed-up posouvá nahoru (viz
+     data-parallax), takže by ji i reálně překrývala. */
+  margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
 }
 
 @media (max-width: 700px) {
