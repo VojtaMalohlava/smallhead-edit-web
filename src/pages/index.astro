@@ -204,65 +204,9 @@ const pickerData = {
     </section>
   </div>
 
-  <div class="section-shell section--green" id="o-mne">
-    <section class="wrap page-section text-section about">
-      <div
-        class="about-portrait bleed-up"
-        data-parallax="0.1"
-        data-parallax-max="40"
-        style="transform: translateY(-3rem);"
-      >
-        <Image src={portrait} alt="Vojtěch Malohlava" width={640} height={800} />
-      </div>
-      <div class="about-content">
-        <SectionMarker time="00:02" label="O mně" />
-        <div class="section-heading">
-          <h2>O mně</h2>
-        </div>
-        <p>Nezačal jsem střihem. Začal jsem tím, že jsem chtěl něco ukázat.</p>
-        <p>
-          Vlogy z vesnice. Potom sestřihy z fotbalu. Roky předtím, než mě
-          napadlo, že by z toho mohla být práce.
-        </p>
-        <p>
-          Někde po cestě mi došlo, že mě nebaví natáčení. Baví mě to, co přijde
-          potom — moment, kdy se z hodin materiálu skládá něco, co má tempo a
-          drží pohromadě. Postprodukce není poslední krok výroby videa. Je to
-          krok, ve kterém video buď začne fungovat, nebo ne.
-        </p>
-        <a class="more" href="/o-mne">Celý příběh</a>
-      </div>
-    </section>
-  </div>
-
-  <div class="section-shell section--green-alt" id="reference">
-    <section class="wrap page-section text-section">
-      <SectionMarker time="00:03" label="Reference" />
-      <div class="section-heading">
-        <h2>Co o nás říkají zákazníci</h2>
-      </div>
-      <div class="references-grid">
-        {references.map((item) => (
-          <article class="reference-card">
-            <div class="reference-illustration">
-              <ReferenceIllustration type={item.type} />
-            </div>
-            <blockquote>
-              <p>„{item.quote}“</p>
-            </blockquote>
-            <footer>
-              <span class="reference-type">{item.type}</span>
-              <span class="reference-name">{item.name}</span>
-            </footer>
-          </article>
-        ))}
-      </div>
-    </section>
-  </div>
-
   <div class="section-shell section--green" id="sluzby">
     <section class="wrap page-section text-section">
-      <SectionMarker time="00:04" label="Služby" />
+      <SectionMarker time="00:02" label="Služby" />
       <div class="section-heading">
         <h2>Služby</h2>
       </div>
@@ -299,9 +243,34 @@ const pickerData = {
     </section>
   </div>
 
-  <div class="section-shell section--green-alt" id="kontakt">
+  <div class="section-shell section--green-alt" id="reference">
     <section class="wrap page-section text-section">
-      <SectionMarker time="00:05" label="Kontakt" />
+      <SectionMarker time="00:03" label="Reference" />
+      <div class="section-heading">
+        <h2>Co o nás říkají zákazníci</h2>
+      </div>
+      <div class="references-grid">
+        {references.map((item) => (
+          <article class="reference-card">
+            <div class="reference-illustration">
+              <ReferenceIllustration type={item.type} />
+            </div>
+            <blockquote>
+              <p>„{item.quote}“</p>
+            </blockquote>
+            <footer>
+              <span class="reference-type">{item.type}</span>
+              <span class="reference-name">{item.name}</span>
+            </footer>
+          </article>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <div class="section-shell section--green" id="kontakt">
+    <section class="wrap page-section text-section">
+      <SectionMarker time="00:04" label="Kontakt" />
       <div class="section-heading">
         <h2>Máte materiál a termín?</h2>
       </div>
@@ -310,6 +279,37 @@ const pickerData = {
         tím, jestli to stihnu a co to bude stát.
       </p>
       <ContactForm />
+    </section>
+  </div>
+
+  <div class="section-shell section--green-alt" id="o-mne">
+    <section class="wrap page-section text-section about">
+      <div
+        class="about-portrait bleed-up"
+        data-parallax="0.1"
+        data-parallax-max="40"
+        style="transform: translateY(-3rem);"
+      >
+        <Image src={portrait} alt="Vojtěch Malohlava" width={640} height={800} />
+      </div>
+      <div class="about-content">
+        <SectionMarker time="00:05" label="O mně" />
+        <div class="section-heading">
+          <h2>O mně</h2>
+        </div>
+        <p>Nezačal jsem střihem. Začal jsem tím, že jsem chtěl něco ukázat.</p>
+        <p>
+          Vlogy z vesnice. Potom sestřihy z fotbalu. Roky předtím, než mě
+          napadlo, že by z toho mohla být práce.
+        </p>
+        <p>
+          Někde po cestě mi došlo, že mě nebaví natáčení. Baví mě to, co přijde
+          potom — moment, kdy se z hodin materiálu skládá něco, co má tempo a
+          drží pohromadě. Postprodukce není poslední krok výroby videa. Je to
+          krok, ve kterém video buď začne fungovat, nebo ne.
+        </p>
+        <a class="more" href="/o-mne">Celý příběh</a>
+      </div>
     </section>
   </div>
   </Timeline>
