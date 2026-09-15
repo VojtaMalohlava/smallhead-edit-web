@@ -1226,7 +1226,6 @@ a:focus-visible, button:focus-visible {
      v DOM, což je křehké a v reálném prohlížeči (autoplay iframe, scroll
      paralaxa) se to projevovalo jako obsah prosvítající skrz video. */
   z-index: 1;
-  border-top: 1px solid color-mix(in srgb, var(--brown) 70%, transparent);
 }
 
 .hero-shell {
