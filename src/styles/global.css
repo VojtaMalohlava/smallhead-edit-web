@@ -291,6 +291,20 @@ a:focus-visible, button:focus-visible {
   }
 }
 
+.section-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  margin-bottom: clamp(0.5rem, 2vw, 1rem);
+}
+
+@media (max-width: 600px) {
+  .section-cta .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 /* ---------- Video karta (klik na náhled přehraje YouTube video) ---------- */
 
 .video-card__thumb {
