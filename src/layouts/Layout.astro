@@ -180,7 +180,7 @@ const currentPath = Astro.url.pathname;
         .filter((el) => el instanceof HTMLElement);
 
       if (fadeEls.length && !prefersReducedMotion) {
-        const updateFade = () => {
+        const applyFade = () => {
           fadeEls.forEach((el) => {
             const fadeDistance = parseFloat(getComputedStyle(el, "::before").height) || 300;
             const start = window.innerHeight;
@@ -188,6 +188,20 @@ const currentPath = Astro.url.pathname;
             const top = el.getBoundingClientRect().top;
             const progress = Math.min(1, Math.max(0, (top - end) / (start - end)));
             el.style.setProperty("--fade-progress", progress.toFixed(3));
+          });
+        };
+
+        // rAF throttling — psaní inline stylu na každý jednotlivý "scroll"
+        // event (ten umí vystřelit vícekrát za snímek) dělalo za
+        // scrollování ošklivé trhavé/pruhované artefakty. Stejný vzor
+        // jako playhead v Timeline.astro.
+        let ticking = false;
+        const updateFade = () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            ticking = false;
+            applyFade();
           });
         };
 

@@ -279,25 +279,34 @@ a:focus-visible, button:focus-visible {
   gap: 1.5rem;
 }
 
-.showcase-pair {
-  /* Karty na pevnou (ne 1fr přes celou šířku) — svislé video ve
-     100 % šířky .wrap vychází extrémně vysoké. Zarovnané na střed. */
+/* Nadpis "Ukázky práce" vedle videí (ne nad nimi) — levý sloupec s
+   nadpisem, pravý se všemi kartami. .showcase-pair níž je 1fr/1fr, ne
+   pevná šířka v px — díky tomu má automaticky přesně stejnou celkovou
+   šířku jako #ukazky-lead (oba plní stejný sloupec .showcase-media),
+   bez ručního dolaďování dvou čísel na sobě navzájem. */
+.showcase-layout {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 320px));
-  justify-content: center;
-  gap: 2rem;
+  grid-template-columns: minmax(200px, 280px) 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
 }
 
 @media (max-width: 900px) {
-  .showcase-pair {
-    grid-template-columns: minmax(0, 320px);
+  .showcase-layout {
+    grid-template-columns: 1fr;
   }
 }
 
-#ukazky-lead {
-  max-width: 760px;
-  margin-left: auto;
-  margin-right: auto;
+.showcase-pair {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 480px) {
+  .showcase-pair {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Kandidátské karty pro "Ukázky práce" jsou všechny v HTML (kvůli
