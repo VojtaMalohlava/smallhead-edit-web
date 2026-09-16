@@ -283,14 +283,14 @@ a:focus-visible, button:focus-visible {
   /* Karty na pevnou (ne 1fr přes celou šířku) — svislé video ve
      100 % šířky .wrap vychází extrémně vysoké. Zarovnané na střed. */
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 260px));
+  grid-template-columns: repeat(2, minmax(0, 320px));
   justify-content: center;
   gap: 2rem;
 }
 
 @media (max-width: 900px) {
   .showcase-pair {
-    grid-template-columns: minmax(0, 260px);
+    grid-template-columns: minmax(0, 320px);
   }
 }
 
