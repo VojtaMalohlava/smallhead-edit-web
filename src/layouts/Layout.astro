@@ -169,26 +169,6 @@ const currentPath = Astro.url.pathname;
         updateParallax();
       }
 
-      // Odkrývání sekcí při scrollování — jednorázově, nikdy se neopakuje.
-      if (!prefersReducedMotion && "IntersectionObserver" in window) {
-        const revealEls = document.querySelectorAll(".section-shell");
-        const revealObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) return;
-              entry.target.classList.add("is-visible");
-              revealObserver.unobserve(entry.target);
-            });
-          },
-          // 0, ne 0.15 — sekce (a s ní i barevný přechod na jejím horním
-          // okraji) má začít prosvítat hned v okamžiku, kdy se objeví
-          // dole na obrazovce, ne až po scrollu kus nahoru přes 15 %
-          // vlastní výšky (u delších sekcí to bylo klidně stovky pixelů
-          // scrollu navíc, než se cokoliv ukázalo).
-          { threshold: 0 },
-        );
-        revealEls.forEach((el) => revealObserver.observe(el));
-      }
     </script>
 
     <div class="grain" aria-hidden="true"></div>
