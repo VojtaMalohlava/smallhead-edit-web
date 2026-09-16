@@ -19,12 +19,13 @@
   --gap: 1.5rem;
   --pad: clamp(1.25rem, 5vw, 4rem);
 
-  /* Jednotný vertikální rytmus — odsazení sekcí zvětšené cca o polovinu
-     oproti původním hodnotám (3.5rem/9vw/6.5rem apod.). */
+  /* Jednotný vertikální rytmus — --lg/--xl zmenšené, sekce byly na
+     sobě příliš daleko (padding nahoře i dole u dvou sousedních sekcí
+     se sčítal a dělal skoro 300px mrtvého prostoru). */
   --space-sm: clamp(1.5rem, 3vw, 2rem);
   --space-md: clamp(2.5rem, 6vw, 4rem);
-  --space-lg: clamp(3.75rem, 9vw, 5.25rem);
-  --space-xl: clamp(5.25rem, 13.5vw, 9.75rem);
+  --space-lg: clamp(3rem, 6vw, 4rem);
+  --space-xl: clamp(3.5rem, 8vw, 6rem);
 
   /* Jediné místo, kde se mění krytí filmového zrna (viz .grain níže). */
   --grain-opacity: 0.16;
@@ -279,14 +280,17 @@ a:focus-visible, button:focus-visible {
 }
 
 .showcase-pair {
+  /* Karty na pevnou (ne 1fr přes celou šířku) — svislé video ve
+     100 % šířky .wrap vychází extrémně vysoké. Zarovnané na střed. */
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 220px));
+  justify-content: center;
   gap: 2rem;
 }
 
 @media (max-width: 900px) {
   .showcase-pair {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 220px);
   }
 }
 
@@ -1241,7 +1245,7 @@ a:focus-visible, button:focus-visible {
    se ten mnohem větší gradient nikdy nepřekrývá s nadpisem. */
 #ukazky,
 #klienti {
-  --fade-distance: clamp(200px, 35vh, 380px);
+  --fade-distance: clamp(140px, 20vh, 240px);
 }
 
 #ukazky::before,
