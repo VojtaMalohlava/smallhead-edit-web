@@ -103,12 +103,10 @@ const ukazkyVertical = featuredProjects.filter((p) => p.format === "vertical");
 
   <Timeline>
   <div class="section-shell section--cream" id="ukazky">
-    <section class="wrap page-section showcase-layout">
-      <div class="showcase-heading">
-        <SectionMarker time="00:01" label="Ukázky práce" />
-        <div class="section-heading">
-          <h2>Ukázky práce</h2>
-        </div>
+    <section class="wrap page-section">
+      <SectionMarker time="00:01" label="Ukázky práce" />
+      <div class="section-heading">
+        <h2>Ukázky práce</h2>
       </div>
 
       <div class="showcase-media">
@@ -125,10 +123,10 @@ const ukazkyVertical = featuredProjects.filter((p) => p.format === "vertical");
         <div class="video-group showcase-pair" id="ukazky-vertical">
           {ukazkyVertical.map((project) => <VideoCard project={project} />)}
         </div>
+      </div>
 
-        <div class="section-cta">
-          <a class="btn btn--secondary" href="/portfolio">Prohlédnout celé portfolio</a>
-        </div>
+      <div class="section-cta">
+        <a class="btn btn--secondary" href="/portfolio">Prohlédnout celé portfolio</a>
       </div>
     </section>
   </div>
