@@ -169,6 +169,32 @@ const currentPath = Astro.url.pathname;
         updateParallax();
       }
 
+      // Barevný přechod zelená <-> krémová (viz #ukazky/#klienti v
+      // global.css) je scroll-reaktivní, ne jen statický gradient —
+      // --fade-progress jde od 1 (sekce se právě objevila dole na
+      // obrazovce) do 0 (posunula se o celou výšku přechodu výš).
+      // Výšku bere přímo z CSS (getComputedStyle na ::before), takže
+      // zůstává v jednom místě, i když se --fade-distance v CSS změní.
+      const fadeEls = ["ukazky", "klienti"]
+        .map((id) => document.getElementById(id))
+        .filter((el) => el instanceof HTMLElement);
+
+      if (fadeEls.length && !prefersReducedMotion) {
+        const updateFade = () => {
+          fadeEls.forEach((el) => {
+            const fadeDistance = parseFloat(getComputedStyle(el, "::before").height) || 300;
+            const start = window.innerHeight;
+            const end = start - fadeDistance;
+            const top = el.getBoundingClientRect().top;
+            const progress = Math.min(1, Math.max(0, (top - end) / (start - end)));
+            el.style.setProperty("--fade-progress", progress.toFixed(3));
+          });
+        };
+
+        window.addEventListener("scroll", updateFade, { passive: true });
+        window.addEventListener("resize", updateFade);
+        updateFade();
+      }
     </script>
 
     <div class="grain" aria-hidden="true"></div>

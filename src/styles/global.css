@@ -1231,13 +1231,40 @@ a:focus-visible, button:focus-visible {
   background: linear-gradient(to bottom, var(--edge-in, transparent), transparent);
 }
 
+/* Zelená <-> krémová (hero -> Ukázky práce, Ukázky práce -> Klienti) je
+   barevně nejdrastičtější skok na celé stránce, proto má mnohem delší
+   a navíc scroll-reaktivní přechod — ne jen statický gradient v malém
+   paddingu, ale --fade-progress dopočítaný v Layout.astro podle toho,
+   jak kus sekce už vjelo od spodu obrazovky (viz JS komentář tam).
+   Vlastní padding sekce se zvětšuje na stejnou hodnotu jako výška
+   přechodu (#ukazky .page-section / #klienti .clients-strip níž), ať
+   se ten mnohem větší gradient nikdy nepřekrývá s nadpisem. */
+#ukazky,
+#klienti {
+  --fade-distance: clamp(200px, 35vh, 380px);
+}
+
+#ukazky::before,
+#klienti::before {
+  height: var(--fade-distance);
+  opacity: var(--fade-progress, 1);
+  will-change: opacity;
+}
+
 #ukazky {
   --edge-in: var(--green);
 }
 
 #klienti {
-  --edge-height: var(--space-lg);
   --edge-in: var(--cream);
+}
+
+#ukazky .page-section {
+  padding-top: var(--fade-distance);
+}
+
+#klienti .clients-strip {
+  padding-top: var(--fade-distance);
 }
 
 #sluzby {
