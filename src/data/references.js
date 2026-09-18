@@ -6,7 +6,7 @@
 
 export const references = [
   {
-    name: "Adam Širota",
+    name: "Adam Sirota",
     type: "Marketingový specialista",
     quote:
       "S Vojtom spolupracujeme na strihu mojich aj klientskych videi a som maximalne spokojny. Vie pochopit moju predstavu a pretavit ju do kvalitneho vysledku bez zbytocneho vysvetlovania. Strih je dynamicky, moderny a vzdy dodany spolahlivo. Urcite odporucam kazdemu, kto hlada kvalitneho a sikovneho editora.",
